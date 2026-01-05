@@ -71,7 +71,6 @@ header {
 .nav-bar {
     display: flex;
     align-items: center;
-    gap: var(--gap);
 }
 #btn-search {
     width: 100%;
@@ -150,11 +149,9 @@ button {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 15px;
 }
 .addTask button {
     padding: 0.5rem;
-    width: calc(100% - 24px);
     border: dashed 2px var(--text-secondary);
     border-radius: var(--border-radius);
     transition: var(--transition);
@@ -190,10 +187,6 @@ button {
     align-items: center;
     justify-content: center;
 }
-.addTask.grid {
-    position: relative;
-    top: calc(100vh - 120px);
-}
 .fa-ellipsis-h {
     font-size: 24px;
 }
@@ -203,18 +196,22 @@ button {
     position: fixed;
     top: 0;
 }
+.modal::-webkit-scrollbar {
+    display: none;
+}
 .modal {
     max-width: 64rem;
     max-height: 90vh;
     height: auto;
-    overflow: hidden;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: none;
     border-radius: 0.75rem;
     background-color: var(--background-light);
     width: 100%;
     justify-content: normal;
     align-items: normal;
     padding: 45px;
-    gap: var(--gap);
 }
 .modalHead h2 {
     font-size: 1.875rem;
@@ -240,6 +237,7 @@ label {
     gap: 0 !important;
 }
 input,
+textarea,
 select,
 .btn button {
     height: 3rem;
@@ -250,6 +248,12 @@ select,
     background: var(--background-light);
     border: 1px solid;
     border-radius: var(--border-radius);
+}
+textarea {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    resize: vertical;
+    height: auto;
 }
 input:focus,
 select:focus {
@@ -288,4 +292,36 @@ select:focus {
 }
 .hidden {
     display: none !important;
+}
+.row div {
+    line-height: 0;
+}
+.date {
+    line-height: 3;
+}
+.task {
+    padding: 20px;
+    background: white;
+    width: calc(100% - 20px);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+}
+.toDo {
+    display: flex;
+    flex-direction: column;
+}
+.toDoTasks {
+    padding: 140px 20px 20px 20px;
+    overflow-y: auto;
+    flex: 1 1 auto;
+    min-height: 0;
+}
+.text {
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 1.5rem;
+    margin-bottom: 0.25rem;
+}
+.gap {
+    gap: var(--gap);
 }

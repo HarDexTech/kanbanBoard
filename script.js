@@ -12,8 +12,6 @@ const dateMM = dateInputs[0];
 const dateYYYY = dateInputs[2];
 const createTask = document.querySelector('.createTask');
 
-dateYYYY.value = new Date().getFullYear();
-
 // functions
 function showModalFunc() {
     document.querySelector('.addTaskModal').classList.remove('hidden');
@@ -24,24 +22,26 @@ function hideModalFunc() {
 }
 
 function validateModalInputFunc() {
+    document.querySelector('.titleError').classList.add('hidden');
+    document.querySelector('.dateError').classList.add('hidden');
+    document.querySelector('.dueDate').classList.add('hidden');
     let dateInput = `${dateMM.value}-${dateDD.value}-${dateYYYY.value}`;
     dateInput = new Date(dateInput);
     let currentDate = new Date();
     if (taskTitle.value.trim() === '') {
         document.querySelector('.titleError').classList.remove('hidden');
-        console.error(1);
     }
     if (
-        dateInput < currentDate ||
         dateInput === 'Invalid Date' ||
         dateDD.value.trim() === '' ||
         dateMM.value.trim() === '' ||
         dateYYYY.value.trim() === ''
     ) {
         document.querySelector('.dateError').classList.remove('hidden');
-        console.error(2);
     }
-    return;
+    if (dateInput < currentDate) {
+        document.querySelector('.dueDate').classList.remove('hidden');
+    }
 }
 
 //event listeners

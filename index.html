@@ -12,7 +12,7 @@
     </head>
     <body>
         <header class="header">
-            <div class="nav-bar">
+            <div class="nav-bar gap">
                 <div class="logo">
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -84,22 +84,115 @@
         <main>
             <!-- to do -->
             <section class="toDo sectionRadius">
+                <!-- header -->
                 <div class="toDoHead headFlex">
-                    <div class="left">
+                    <div class="left gap">
                         <span class="circle toDoCircle"></span>
                         <span class="headTitle">To Do</span>
-                        <span class="numOfTask">3</span>
+                        <span class="numOfTask"></span>
                     </div>
-                    <div class="right">
+                    <div class="right flex gap">
+                        <div class="addTask grid">
+                            <button type="button"><span>Add Task</span></button>
+                        </div>
                         <button type="button">
                             <i class="fas fa-ellipsis-h"></i>
                         </button>
                     </div>
                 </div>
-                <div class="addTask grid">
-                    <button type="button">
-                        <span class="plus">+</span><span>Add Task</span>
-                    </button>
+
+                <div class="toDoTasks flex column gap">
+                    <!-- <div class="task">
+                        <div class="taskTitle">Design new homepage</div>
+                        <div class="taskDesc">
+                            Create a modern and responsive design for the new
+                            homepage.
+                        </div>
+                        <div class="taskFooter">
+                            <div class="priority highPriority">
+                                High Priority
+                            </div>
+                            <div class="dueDate">Due: 2024-07-15</div>
+                        </div>
+                    </div>
+                    <div class="task">
+                        <div class="taskTitle">Design new homepage</div>
+                        <div class="taskDesc">
+                            Create a modern and responsive design for the new
+                            homepage.
+                        </div>
+                        <div class="taskFooter">
+                            <div class="priority highPriority">
+                                High Priority
+                            </div>
+                            <div class="dueDate">Due: 2024-07-15</div>
+                        </div>
+                    </div>
+                    <div class="task">
+                        <div class="taskTitle">Design new homepage</div>
+                        <div class="taskDesc">
+                            Create a modern and responsive design for the new
+                            homepage.
+                        </div>
+                        <div class="taskFooter">
+                            <div class="priority highPriority">
+                                High Priority
+                            </div>
+                            <div class="dueDate">Due: 2024-07-15</div>
+                        </div>
+                    </div>
+                    <div class="task">
+                        <div class="taskTitle">Design new homepage</div>
+                        <div class="taskDesc">
+                            Create a modern and responsive design for the new
+                            homepage.
+                        </div>
+                        <div class="taskFooter">
+                            <div class="priority highPriority">
+                                High Priority
+                            </div>
+                            <div class="dueDate">Due: 2024-07-15</div>
+                        </div>
+                    </div>
+                    <div class="task">
+                        <div class="taskTitle">Design new homepage</div>
+                        <div class="taskDesc">
+                            Create a modern and responsive design for the new
+                            homepage.
+                        </div>
+                        <div class="taskFooter">
+                            <div class="priority highPriority">
+                                High Priority
+                            </div>
+                            <div class="dueDate">Due: 2024-07-15</div>
+                        </div>
+                    </div>
+                    <div class="task">
+                        <div class="taskTitle">Design new homepage</div>
+                        <div class="taskDesc">
+                            Create a modern and responsive design for the new
+                            homepage.
+                        </div>
+                        <div class="taskFooter">
+                            <div class="priority highPriority">
+                                High Priority
+                            </div>
+                            <div class="dueDate">Due: 2024-07-15</div>
+                        </div>
+                    </div>
+                    <div class="task">
+                        <div class="taskTitle">Design new homepage</div>
+                        <div class="taskDesc">
+                            Create a modern and responsive design for the new
+                            homepage.
+                        </div>
+                        <div class="taskFooter">
+                            <div class="priority highPriority">
+                                High Priority
+                            </div>
+                            <div class="dueDate">Due: 2024-07-15</div>
+                        </div>
+                    </div> -->
                 </div>
             </section>
 
@@ -109,7 +202,7 @@
                     <div class="left">
                         <span class="circle inProgressCircle"></span>
                         <span class="headTitle">In Progress</span>
-                        <span class="numOfTask">3</span>
+                        <span class="numOfTask"></span>
                     </div>
                     <div class="right">
                         <button type="button">
@@ -125,7 +218,7 @@
                     <div class="left">
                         <span class="circle doneCircle"></span>
                         <span class="headTitle">Done</span>
-                        <span class="numOfTask">3</span>
+                        <span class="numOfTask"></span>
                     </div>
                     <div class="right">
                         <button type="button">
@@ -137,7 +230,7 @@
         </main>
 
         <section class="addTaskModal flex hidden">
-            <div class="modal flex column">
+            <div class="modal flex column gap">
                 <div class="modalHead">
                     <h2>Add New Task</h2>
                     <p>Create a new card for your board</p>
@@ -155,11 +248,11 @@
                 </div>
                 <div class="description">
                     <label>Description</label>
-                    <input
-                        type="text"
-                        required
+                    <textarea
+                        cols="30"
+                        rows="10"
                         placeholder="Add details about this task..."
-                    />
+                    ></textarea>
                 </div>
                 <div class="priority">
                     <label for="priorityList"
@@ -177,12 +270,24 @@
                         <span style="color: red">*</span></label
                     >
                     <div class="row">
-                        <input type="number" placeholder="MM" />
-                        <input type="number" placeholder="DD" />
-                        <input type="number" placeholder="YYYY" />
+                        <div>
+                            <label for="mm">MM</label>
+                            <input type="number" placeholder="MM" id="mm" />
+                        </div>
+                        <div>
+                            <label for="dd">DD</label>
+                            <input type="number" placeholder="DD" id="dd" />
+                        </div>
+                        <div>
+                            <label for="yyyy">YYYY</label>
+                            <input type="number" placeholder="YYYY" id="yyyy" />
+                        </div>
                     </div>
                     <p style="color: red" class="dateError hidden">
                         Please, Enter a valid date
+                    </p>
+                    <p style="color: red" class="dueDate hidden">
+                        Due date can not be in the past
                     </p>
                 </div>
                 <div class="btn row">
