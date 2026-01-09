@@ -30,7 +30,10 @@ function validateModalInputFunc() {
     let currentDate = new Date();
     if (taskTitle.value.trim() === '') {
         document.querySelector('.titleError').classList.remove('hidden');
+        document.querySelector('.titleError').textContent = 'Title cannot be empty';
     }
+    (taskTitle.value.length > 50) && document.querySelector('.titleError').classList.remove('hidden');
+    (taskTitle.value.length > 50) && (document.querySelector('.titleError').textContent = 'Title cannot exceed 50 characters');
     if (
         dateInput === 'Invalid Date' ||
         dateDD.value.trim() === '' ||
@@ -42,6 +45,10 @@ function validateModalInputFunc() {
     if (dateInput < currentDate) {
         document.querySelector('.dueDate').classList.remove('hidden');
     }
+}
+
+function showTasksFunc() {
+    // function to show tasks will be implemented here
 }
 
 //event listeners
