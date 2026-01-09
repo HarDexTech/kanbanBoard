@@ -99,7 +99,7 @@ header {
     background-color: var(--success);
 }
 section {
-    height: 100dvh;
+    height: calc(100vh - 65px - 24px); /* viewport - header - bottom padding */
     width: var(--sectionWidth);
     background-color: var(--sectionbg);
 }
@@ -305,8 +305,11 @@ select:focus {
     width: calc(100% - 20px);
     border-radius: var(--border-radius);
     box-shadow: var(--shadow);
+    letter-spacing: 0.5px;
 }
-.toDo {
+.toDo,
+.inProgress,
+.done {
     display: flex;
     flex-direction: column;
 }
@@ -325,4 +328,32 @@ select:focus {
 }
 .gap {
     gap: var(--gap);
+}
+.taskTitle {
+    font-weight: bolder;
+    font-size: var(--spacing-lg);
+    border-bottom: 2px solid grey;
+}
+.taskDesc {
+    font-size: var(--spacing-md);
+    padding: 5px 0 5px 0;
+}
+.red {
+    color: red;
+}
+.orange {
+    color: orange;
+}
+.taskFooter {
+    display: flex;
+}
+.menu {
+    border: none;
+    background: none;
+    cursor: pointer;
+    width: 100%;
+    text-align: end;
+}
+.menu, .menu i{
+    height: 20px;
 }

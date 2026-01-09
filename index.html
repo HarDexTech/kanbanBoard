@@ -89,7 +89,7 @@
                     <div class="left gap">
                         <span class="circle toDoCircle"></span>
                         <span class="headTitle">To Do</span>
-                        <span class="numOfTask">3</span>
+                        <span class="numOfTask hidden"></span>
                     </div>
                     <div class="right flex gap">
                         <div class="addTask grid">
@@ -101,60 +101,7 @@
                     </div>
                 </div>
 
-                <div class="toDoTasks flex column gap">
-                    <div class="task">
-                        <div class="taskTitle">Design new homepage</div>
-                        <div class="taskDesc">
-                            Create a modern and responsive design for the new
-                            homepage.
-                        </div>
-                        <div class="taskFooter">
-                            <div class="priority highPriority">
-                                High Priority
-                            </div>
-                            <div class="dueDate">Due: 2024-07-15</div>
-                        </div>
-                    </div>
-                    <div class="task">
-                        <div class="taskTitle">Design new homepage</div>
-                        <div class="taskDesc">
-                            Create a modern and responsive design for the new
-                            homepage.
-                        </div>
-                        <div class="taskFooter">
-                            <div class="priority highPriority">
-                                High Priority
-                            </div>
-                            <div class="dueDate">Due: 2024-07-15</div>
-                        </div>
-                    </div>
-                    <div class="task">
-                        <div class="taskTitle">Design new homepage</div>
-                        <div class="taskDesc">
-                            Create a modern and responsive design for the new
-                            homepage.
-                        </div>
-                        <div class="taskFooter">
-                            <div class="priority highPriority">
-                                High Priority
-                            </div>
-                            <div class="dueDate">Due: 2024-07-15</div>
-                        </div>
-                    </div>
-                    <div class="task">
-                        <div class="taskTitle">Design new homepage</div>
-                        <div class="taskDesc">
-                            Create a modern and responsive design for the new
-                            homepage.
-                        </div>
-                        <div class="taskFooter">
-                            <div class="priority highPriority">
-                                High Priority
-                            </div>
-                            <div class="dueDate">Due: 2024-07-15</div>
-                        </div>
-                    </div>
-                </div>
+                <div class="toDoTasks flex column gap"></div>
             </section>
 
             <!-- in progress -->
@@ -190,13 +137,13 @@
             </section>
         </main>
 
-        <section class="addTaskModal flex hidden">
+        <section class="addTaskModal flex hidden" style="height: 100dvh">
             <div class="modal flex column gap">
                 <div class="modalHead">
                     <h2>Add New Task</h2>
                     <p>Create a new card for your board</p>
                 </div>
-                <div class="taskTitle">
+                <div class="taskTitleInput">
                     <label>Task Title <span style="color: red">*</span></label>
                     <input
                         type="text"
