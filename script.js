@@ -1,3 +1,9 @@
+/*********** TODO ******************
+Implement localstorage to save tasks on page reloads
+Add edit and delete functionality to tasks
+Search functionality to find tasks by title
+************************************/
+
 'use strict';
 
 // dom elements
@@ -207,8 +213,14 @@ function showMenu(e) {
 
 function numOfTasksFunc() {
     let numOfTasks = document.querySelectorAll('.toDoTasks .task').length;
+    let numOfInProgress = document.querySelectorAll('.inProgressTasks .task').length;
+    let numOfDone = document.querySelectorAll('.doneTasks .task').length;
     document.querySelector('.numOfTask').textContent = numOfTasks;
     document.querySelector('.numOfTask').classList.remove('hidden');
+    document.querySelector('.numOfInProgressTask').textContent = numOfInProgress;
+    document.querySelector('.numOfInProgressTask').classList.remove('hidden');
+    document.querySelector('.numOfDoneTask').textContent = numOfDone;
+    document.querySelector('.numOfDoneTask').classList.remove('hidden');
 }
 
 function moveTask(taskId, newStatus) {
