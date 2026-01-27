@@ -44,9 +44,9 @@ function validateModalInputFunc() {
     document.querySelector('.titleError').classList.add('hidden');
     document.querySelector('.dateError').classList.add('hidden');
     document.querySelector('.dueDate').classList.add('hidden');
-    dateInput = `${dateMM.value}-${dateDD.value}-${dateYYYY.value}`;//get date input in mm-dd-yyyy format
-    let changeDateFormat = new Date(dateInput);//change date format to compare
-    let currentDate = new Date();//get current date
+    dateInput = `${dateMM.value}-${dateDD.value}-${dateYYYY.value}`; //get date input in mm-dd-yyyy format
+    let changeDateFormat = new Date(dateInput); //change date format to compare
+    let currentDate = new Date(); //get current date
 
     // validation checks
     if (taskTitle.value.trim() === '') {
@@ -67,12 +67,12 @@ function validateModalInputFunc() {
         dateYYYY.value.trim() === ''
     ) {
         document.querySelector('.dateError').classList.remove('hidden');
-        return;//ends the function
+        return; //ends the function
     }
     if (changeDateFormat < currentDate) {
         //return error if due date is in the past
         document.querySelector('.dueDate').classList.remove('hidden');
-        return;//ends the function
+        return; //ends the function
     }
 
     // Loop through tasks.toDo and create HTML for each
@@ -100,50 +100,55 @@ function toDOArrayFunc() {
 }
 
 function renderAllTasks() {
-    // Clear all columns, then re-add tasks
+    /********************************clear all menus before re-rendering******************************/
     toDoTasks.innerHTML = '';
     inProgressTasks.innerHTML = '';
     doneTasks.innerHTML = '';
 
-    // Loop through tasks.toDo, tasks.inProgress, and tasks.done and create HTML for each
-    //todo's loop
-    for (let i = 0; i < tasks.toDo.length; i++) {
+    /********************************render all tasks from tasks object using loops**********************/
+    //toDo loop
+    tasks.toDo.forEach((task) => {
         updateHTML(
-            tasks.toDo[i].title,
-            tasks.toDo[i].description,
-            tasks.toDo[i].priority,
-            tasks.toDo[i].dueDate,
-            tasks.toDo[i].id,
+            task.title,
+            task.description,
+            task.priority,
+            task.dueDate,
+            task.id,
             'toDo'
         );
-    }
+    });
 
     //inProgress loop
-    for (let i = 0; i < tasks.inProgress.length; i++) {
+    tasks.inProgress.forEach((task) => {
         updateHTML(
-            tasks.inProgress[i].title,
-            tasks.inProgress[i].description,
-            tasks.inProgress[i].priority,
-            tasks.inProgress[i].dueDate,
-            tasks.inProgress[i].id,
-            'inProgress'
+            task.title,
+            task.description,
+            task.priority,
+            task.dueDate,
+            task.id,
+            'toDo'
         );
-    }
+    });
 
     //done loop
-    for (let i = 0; i < tasks.done.length; i++) {
+    tasks.done.forEach((task) => {
         updateHTML(
-            tasks.done[i].title,
-            tasks.done[i].description,
-            tasks.done[i].priority,
-            tasks.done[i].dueDate,
-            tasks.done[i].id,
-            'done'
+            task.title,
+            task.description,
+            task.priority,
+            task.dueDate,
+            task.id,
+            'toDo'
         );
-    }
+    });
+
+    //hide all menus after re-rendering in done section
+    document
+        .querySelectorAll('.doneTasks .task .menu')
+        .forEach((hide) => hide.classList.add('hidden'));
 
     closeModalFunc(); //close task modal
-    numOfTasksFunc();//update number of tasks
+    numOfTasksFunc(); //update number of tasks
 }
 
 function updateHTML(
@@ -213,11 +218,14 @@ function showMenu(e) {
 
 function numOfTasksFunc() {
     let numOfTasks = document.querySelectorAll('.toDoTasks .task').length;
-    let numOfInProgress = document.querySelectorAll('.inProgressTasks .task').length;
+    let numOfInProgress = document.querySelectorAll(
+        '.inProgressTasks .task'
+    ).length;
     let numOfDone = document.querySelectorAll('.doneTasks .task').length;
     document.querySelector('.numOfTask').textContent = numOfTasks;
     document.querySelector('.numOfTask').classList.remove('hidden');
-    document.querySelector('.numOfInProgressTask').textContent = numOfInProgress;
+    document.querySelector('.numOfInProgressTask').textContent =
+        numOfInProgress;
     document.querySelector('.numOfInProgressTask').classList.remove('hidden');
     document.querySelector('.numOfDoneTask').textContent = numOfDone;
     document.querySelector('.numOfDoneTask').classList.remove('hidden');
@@ -271,4 +279,4 @@ function moveTask(taskId, newStatus) {
 //event listeners
 addTaskBtn.addEventListener('click', showModalFunc);
 cancelModalBtn.addEventListener('click', closeModalFunc);
-createTask.addEventListener('click', validateModalInputFunc);//validate inputs, create task and render tasks
+createTask.addEventListener('click', validateModalInputFunc); //validate inputs, create task and render tasks
