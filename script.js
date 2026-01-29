@@ -126,7 +126,7 @@ function renderAllTasks() {
             task.priority,
             task.dueDate,
             task.id,
-            'toDo'
+            'inProgress'
         );
     });
 
@@ -138,7 +138,7 @@ function renderAllTasks() {
             task.priority,
             task.dueDate,
             task.id,
-            'toDo'
+            'done'
         );
     });
 
@@ -146,6 +146,18 @@ function renderAllTasks() {
     document
         .querySelectorAll('.doneTasks .task .menu')
         .forEach((hide) => hide.classList.add('hidden'));
+
+    //hide move to done button in in progress section
+    document
+        .querySelectorAll('.inProgressTasks .task .taskMenu .moveToProgress')
+        .forEach((btn) => btn.classList.add('hidden'));
+
+    //add strike through to done task titles
+    document
+        .querySelectorAll('.doneTasks .taskTitle')
+        .forEach((addStrikeElementsToDoneTitle) =>
+            addStrikeElementsToDoneTitle.classList.add('strike')
+        );
 
     closeModalFunc(); //close task modal
     numOfTasksFunc(); //update number of tasks
@@ -195,6 +207,7 @@ function updateHTML(
     </div>
     `;
     const allMenu = document.querySelectorAll('.menu');
+    /******************************************* Add event listeners to all menu buttons ****************************/
     allMenu.forEach((btn) => btn.addEventListener('click', showMenu));
     const moveButtons = document.querySelectorAll('.btnMove');
     moveButtons.forEach((btn) =>
@@ -207,6 +220,15 @@ function updateHTML(
             moveTask(taskId, newStatus);
         })
     );
+    window.onclick = function (event) {
+        if (!event.target.matches('.menu i')) {
+            document.querySelectorAll('.taskMenu').forEach((menu) => {
+                if (!menu.classList.contains('hidden')) {
+                    menu.classList.add('hidden');
+                }
+            });
+        }
+    };
 }
 
 function showMenu(e) {
@@ -217,6 +239,7 @@ function showMenu(e) {
 }
 
 function numOfTasksFunc() {
+    //calculate number of tasks in each section and update the DOM
     let numOfTasks = document.querySelectorAll('.toDoTasks .task').length;
     let numOfInProgress = document.querySelectorAll(
         '.inProgressTasks .task'

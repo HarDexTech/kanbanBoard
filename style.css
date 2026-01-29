@@ -1,3 +1,7 @@
+/************************************************TODO
+- responsive design for mobile
+*********************************************/
+
 :root {
     --shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     --shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.15);
@@ -378,5 +382,15 @@ select:focus {
         &:hover {
             background: var(--background-light);
         }
+    }
+}
+.strike {
+    text-decoration: line-through;
+    color: var(--text-secondary);
+}
+.github-corner {
+    transform: scale(2);
+    & i {
+        font-size: var(--spacing-md) !important;
     }
 }
