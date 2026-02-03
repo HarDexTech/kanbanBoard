@@ -363,7 +363,7 @@ select:focus {
 .menu i {
     height: 20px;
 }
-.taskMenu {
+.taskMenu, .groupBtnDisplay {
     position: absolute;
     background: white;
     box-shadow: var(--shadow-lg);
@@ -392,5 +392,30 @@ select:focus {
     transform: scale(2);
     & i {
         font-size: var(--spacing-md) !important;
+        color: black;
     }
+}
+#groupBtn1{
+    anchor-name: --position-menu;
+}
+#groupMenu1{
+    position-anchor: --position-menu;
+    top: anchor(bottom);
+    right: anchor(right);
+}
+#groupBtn2{
+    anchor-name: --position-menu2;
+}
+#groupMenu2{
+    position-anchor: --position-menu2;
+    top: anchor(bottom);
+    right: anchor(right);
+}
+#groupBtn3{
+    anchor-name: --position-menu3;
+}
+#groupMenu3{
+    position-anchor: --position-menu3;
+    top: anchor(bottom);
+    right: anchor(right);
 }
