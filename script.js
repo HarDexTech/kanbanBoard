@@ -299,6 +299,25 @@ function moveTask(taskId, newStatus) {
     }
 }
 
+//show menu output will be implemented here
+document.querySelectorAll('.menuBtn').forEach((siblingMenuBtn) =>
+    siblingMenuBtn.addEventListener('click', function () {
+        this.closest('.menuContainer')
+            .querySelector('.groupBtnDisplay')
+            .classList.toggle('hidden');
+    })
+);
+
+//clear tasks in each section when clear button is clicked and re-render tasks
+document.querySelectorAll('.groupBtnDisplay').forEach((item) =>
+    item.addEventListener('click', function () {
+        tasks[this.closest('section').classList[0]] = [];
+        renderAllTasks();
+    })
+);
+
+// document.querySelectorAll('.menuContainer').forEach(x => console.log(x.closest('section').classList[0]))
+
 //event listeners
 addTaskBtn.addEventListener('click', showModalFunc);
 cancelModalBtn.addEventListener('click', closeModalFunc);
