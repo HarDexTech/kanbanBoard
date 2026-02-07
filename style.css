@@ -1,4 +1,4 @@
-/************************************************TODO
+/*TODO
 - responsive design for mobile
 *********************************************/
 
@@ -22,7 +22,6 @@
     --success: #4caf50;
     --danger: #f44336;
     --warning: #ff9800;
-    --fontFamily: Inter, sans-serif;
     --sectionbg: rgb(229 231 235 / 0.5);
     --tasknum: rgb(51 51 51 / 0.1);
     --sectionWidth: calc(100vw / 3 - 20px);
@@ -305,11 +304,18 @@ select:focus {
 .task {
     padding: 20px;
     background: white;
-    width: calc(100% - 20px);
+    width: 100%;
     border-radius: var(--border-radius);
     box-shadow: var(--shadow);
     letter-spacing: 0.5px;
     margin: 5px 0;
+    position: relative;
+}
+.taskMenu {
+    position: absolute;
+    top: 40px;
+    left: 10px;
+    z-index: 10;
 }
 .toDo,
 .inProgress,
@@ -363,8 +369,8 @@ select:focus {
 .menu i {
     height: 20px;
 }
-.taskMenu, .groupBtnDisplay {
-    position: absolute;
+.taskMenu,
+.groupBtnDisplay {
     background: white;
     box-shadow: var(--shadow-lg);
     border-radius: var(--border-radius);
@@ -384,6 +390,10 @@ select:focus {
         }
     }
 }
+.groupBtnDisplay {
+    position: absolute;
+    z-index: 100;
+}
 .strike {
     text-decoration: line-through;
     color: var(--text-secondary);
@@ -395,26 +405,26 @@ select:focus {
         color: black;
     }
 }
-#groupBtn1{
+#groupBtn1 {
     anchor-name: --position-menu;
 }
-#groupMenu1{
+#groupMenu1 {
     position-anchor: --position-menu;
     top: anchor(bottom);
     right: anchor(right);
 }
-#groupBtn2{
+#groupBtn2 {
     anchor-name: --position-menu2;
 }
-#groupMenu2{
+#groupMenu2 {
     position-anchor: --position-menu2;
     top: anchor(bottom);
     right: anchor(right);
 }
-#groupBtn3{
+#groupBtn3 {
     anchor-name: --position-menu3;
 }
-#groupMenu3{
+#groupMenu3 {
     position-anchor: --position-menu3;
     top: anchor(bottom);
     right: anchor(right);

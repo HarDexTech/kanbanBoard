@@ -1,11 +1,9 @@
-/*********** TODO ******************
-Implement localstorage to save tasks on page reloads
+//TODO
+/*Implement localstorage to save tasks on page reloads
 Add edit and delete functionality to tasks
-Search functionality to find tasks by title
-************************************/
+Search functionality to find tasks by title*/
 
 'use strict';
-
 // dom elements
 const addTaskBtn = document.querySelector('.addTask button');
 const cancelModalBtn = document.querySelector('.cancelBtn');
@@ -21,14 +19,14 @@ const toDoTasks = document.querySelector('.toDoTasks');
 const inProgressTasks = document.querySelector('.inProgressTasks');
 const doneTasks = document.querySelector('.doneTasks');
 let dateInput;
-const tasks = {
+
+let tasks = JSON.parse(localStorage.getItem('data')) || {
     toDo: [],
     inProgress: [],
     done: [],
-};
+}; //get tasks object from localstorage or initialize if not present
 
 // functions
-
 //remove hidden class to show modal
 function showModalFunc() {
     document.querySelector('.addTaskModal').classList.remove('hidden');
@@ -39,7 +37,12 @@ function closeModalFunc() {
     document.querySelector('.addTaskModal').classList.add('hidden');
 }
 
+// debugger;
 function validateModalInputFunc() {
+    taskTitle.value = `Ayomide`;
+    dateDD.value = new Date().getDate() + 1;
+    dateMM.value = new Date().getMonth() + 1;
+    dateYYYY.value = new Date().getFullYear();
     // reset error messages and dom elements
     document.querySelector('.titleError').classList.add('hidden');
     document.querySelector('.dateError').classList.add('hidden');
@@ -100,6 +103,13 @@ function toDOArrayFunc() {
 }
 
 function renderAllTasks() {
+    localStorage.setItem('data', JSON.stringify(tasks)); //save tasks object to localstorage
+
+    tasks = JSON.parse(localStorage.getItem('data')) || {
+        toDo: [],
+        inProgress: [],
+        done: [],
+    }; //get tasks object from localstorage or initialize if not present
     /********************************clear all menus before re-rendering******************************/
     toDoTasks.innerHTML = '';
     inProgressTasks.innerHTML = '';
@@ -160,8 +170,9 @@ function renderAllTasks() {
         );
 
     closeModalFunc(); //close task modal
-    numOfTasksFunc(); //update number of tasks
+    numOfTasksFunc(); //update number of tasks in each section
 }
+renderAllTasks(); //render tasks on page load
 
 function updateHTML(
     taskTitleValue,
@@ -171,6 +182,7 @@ function updateHTML(
     id,
     status
 ) {
+    // debugger
     let color;
     priorityItemValue === 'High Priority'
         ? (color = 'red')
@@ -202,10 +214,11 @@ function updateHTML(
         <div class="taskDesc">${taskDescriptionValue}</div>
         <div class="taskFooter column">
             <div class="priority" style="color: ${color};">${priorityItemValue}</div>
-            <div class="dueDate">Due: ${new Date(dateInputValue).toLocaleDateString()}</div>
+            <div class="dueDate">Due: ${new Date(dateInputValue).toDateString()}</div>
         </div>
     </div>
     `;
+
     const allMenu = document.querySelectorAll('.menu');
     /******************************************* Add event listeners to all menu buttons ****************************/
     allMenu.forEach((btn) => btn.addEventListener('click', showMenu));
@@ -311,12 +324,11 @@ document.querySelectorAll('.menuBtn').forEach((siblingMenuBtn) =>
 //clear tasks in each section when clear button is clicked and re-render tasks
 document.querySelectorAll('.groupBtnDisplay').forEach((item) =>
     item.addEventListener('click', function () {
+        // Get section name (toDo, inProgress, or done) from parent section's first class
         tasks[this.closest('section').classList[0]] = [];
         renderAllTasks();
     })
 );
-
-// document.querySelectorAll('.menuContainer').forEach(x => console.log(x.closest('section').classList[0]))
 
 //event listeners
 addTaskBtn.addEventListener('click', showModalFunc);
