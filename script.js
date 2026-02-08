@@ -1,5 +1,5 @@
 //TODO
-/*Implement localstorage to save tasks on page reloads
+/*
 Add edit and delete functionality to tasks
 Search functionality to find tasks by title*/
 
@@ -52,13 +52,18 @@ function validateModalInputFunc() {
         document.querySelector('.titleError').classList.remove('hidden');
         document.querySelector('.titleError').textContent =
             'Title cannot be empty';
+        taskTitle.scrollIntoView({ behavior: 'smooth', block: 'start' });
         return;
     }
     taskTitle.value.length > 50 &&
-        document.querySelector('.titleError').classList.remove('hidden');
+        (document.querySelector('.titleError').classList.remove('hidden'),
+        document
+            .querySelector('.titleError')
+            .scrollIntoView({ behavior: 'smooth', block: 'start' }));
     taskTitle.value.length > 50 &&
-        (document.querySelector('.titleError').textContent =
-            'Title cannot exceed 50 characters');
+        ((document.querySelector('.titleError').textContent =
+            'Title cannot exceed 50 characters'),
+        taskTitle.scrollIntoView({ behavior: 'smooth', block: 'start' }));
     if (
         changeDateFormat === 'Invalid Date' ||
         dateDD.value.trim() === '' ||
@@ -66,6 +71,9 @@ function validateModalInputFunc() {
         dateYYYY.value.trim() === ''
     ) {
         document.querySelector('.dateError').classList.remove('hidden');
+        document
+            .querySelector('.dateError')
+            .scrollIntoView({ behavior: 'smooth', block: 'start' });
         return; //ends the function
     }
     if (changeDateFormat < currentDate) {
