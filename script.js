@@ -39,10 +39,6 @@ function closeModalFunc() {
 
 // debugger;
 function validateModalInputFunc() {
-    taskTitle.value = `Ayomide`;
-    dateDD.value = new Date().getDate() + 1;
-    dateMM.value = new Date().getMonth() + 1;
-    dateYYYY.value = new Date().getFullYear();
     // reset error messages and dom elements
     document.querySelector('.titleError').classList.add('hidden');
     document.querySelector('.dateError').classList.add('hidden');
