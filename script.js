@@ -1,7 +1,5 @@
 //TODO
-/*
-Add edit and delete functionality to tasks
-Search functionality to find tasks by title*/
+/*Search functionality to find tasks by title*/
 'use strict';
 // dom elements
 const addTaskBtn = document.querySelector('.addTask button');
@@ -253,45 +251,53 @@ function showMenu(e) {
 
 // NOTIFICATION FUNCTION
 function notificationFunc(msg) {
-    notification.animate(
-        [
-            { transform: 'translateX(0)', opacity: 1 },
-            { transform: 'translateX(100px)', opacity: 0 },
-        ],
-        {
-            duration: 4000,
-            easing: 'ease-out',
-        }
-    );
     // Set notification text content
     notification.textContent = msg;
     // Remove the hidden class to show the notification
     notification.classList.remove('hidden');
-    // Hide notification after 2 seconds
+
+    notification.animate(
+        [
+            { transform: 'translateX(100px)', opacity: 0, offset: 0 },
+            { transform: 'translateX(0)', opacity: 1, offset: 0.05 }, // ease-in completes at 0.3 seconds
+            { transform: 'translateX(0)', opacity: 1, offset: 0.68 }, // stays visible until 4 seconds
+            { transform: 'translateX(100px)', opacity: 0, offset: 1 }, // ease-out from 4 to 6 seconds
+        ],
+        {
+            duration: 6000,
+            easing: 'ease-in',
+        }
+    );
+
+    // Hide notification after animation completes
     setTimeout(() => {
         notification.classList.add('hidden');
-    }, 4000);
+    }, 6000);
 }
 
 function notificationFuncSecondary(msg) {
-    notificationSecondary.animate(
-        [
-            { transform: 'translateX(0)', opacity: 1 },
-            { transform: 'translateX(100px)', opacity: 0 },
-        ],
-        {
-            duration: 4000,
-            easing: 'ease-out',
-        }
-    );
     // Set notification text content
     notificationSecondary.textContent = msg;
     // Remove the hidden class to show the notification
     notificationSecondary.classList.remove('hidden');
-    // Hide notification after 2 seconds
+
+    notificationSecondary.animate(
+        [
+            { transform: 'translateX(100px)', opacity: 0, offset: 0 },
+            { transform: 'translateX(0)', opacity: 1, offset: 0.05 }, // ease-in completes at 0.3 seconds
+            { transform: 'translateX(0)', opacity: 1, offset: 0.68 }, // stays visible until 4 seconds
+            { transform: 'translateX(100px)', opacity: 0, offset: 1 }, // ease-out from 4 to 6 seconds
+        ],
+        {
+            duration: 6000,
+            easing: 'ease-in',
+        }
+    );
+
+    // Hide notification after animation completes
     setTimeout(() => {
         notificationSecondary.classList.add('hidden');
-    }, 4000);
+    }, 6000);
 }
 
 function numOfTasksFunc() {
