@@ -2,7 +2,6 @@
 /*
 Add edit and delete functionality to tasks
 Search functionality to find tasks by title*/
-
 'use strict';
 // dom elements
 const addTaskBtn = document.querySelector('.addTask button');
@@ -18,6 +17,8 @@ const createTask = document.querySelector('.createTask');
 const toDoTasks = document.querySelector('.toDoTasks');
 const inProgressTasks = document.querySelector('.inProgressTasks');
 const doneTasks = document.querySelector('.doneTasks');
+const notification = document.querySelector('.notification');
+const notificationSecondary = document.querySelector('.notificationSecondary');
 let dateInput;
 
 let tasks = JSON.parse(localStorage.getItem('data')) || {
@@ -37,14 +38,17 @@ function closeModalFunc() {
     document.querySelector('.addTaskModal').classList.add('hidden');
 }
 
-// debugger;
 function validateModalInputFunc() {
     // reset error messages and dom elements
     document.querySelector('.titleError').classList.add('hidden');
     document.querySelector('.dateError').classList.add('hidden');
     document.querySelector('.dueDate').classList.add('hidden');
     dateInput = `${dateMM.value}-${dateDD.value}-${dateYYYY.value}`; //get date input in mm-dd-yyyy format
-    let changeDateFormat = new Date(dateInput); //change date format to compare
+    let d = new Date(dateInput);
+    let changeDateFormat = isNaN(d.getTime()) ? '--' : d;
+    // let changeDateFormat = new Date(dateInput) || '--'; //change date format to compare
+    // console.log(changeDateFormat);
+    // changeDateFormat == 'Invalid Date' ? (changeDateFormat = '--') : changeDateFormat; //get date input in mm-dd-yyyy format
     let currentDate = new Date(); //get current date
 
     // validation checks
@@ -64,23 +68,13 @@ function validateModalInputFunc() {
         ((document.querySelector('.titleError').textContent =
             'Title cannot exceed 50 characters'),
         taskTitle.scrollIntoView({ behavior: 'smooth', block: 'start' }));
-    if (
-        changeDateFormat === 'Invalid Date' ||
-        dateDD.value.trim() === '' ||
-        dateMM.value.trim() === '' ||
-        dateYYYY.value.trim() === ''
-    ) {
-        document.querySelector('.dateError').classList.remove('hidden');
-        document
-            .querySelector('.dateError')
-            .scrollIntoView({ behavior: 'smooth', block: 'start' });
-        return; //ends the function
-    }
     if (changeDateFormat < currentDate) {
         //return error if due date is in the past
         document.querySelector('.dueDate').classList.remove('hidden');
         return; //ends the function
     }
+
+    dateInput === '--' ? (dateInput = '--') : dateInput; //get date input in mm-dd-yyyy format
 
     // Loop through tasks.toDo and create HTML for each
     toDOArrayFunc();
@@ -108,6 +102,7 @@ function toDOArrayFunc() {
 
 function renderAllTasks() {
     localStorage.setItem('data', JSON.stringify(tasks)); //save tasks object to localstorage
+    notificationFunc('Tasks Updated'); //show notification that tasks have been updated
 
     tasks = JSON.parse(localStorage.getItem('data')) || {
         toDo: [],
@@ -175,6 +170,7 @@ function renderAllTasks() {
 
     closeModalFunc(); //close task modal
     numOfTasksFunc(); //update number of tasks in each section
+    notificationFunc('Tasks Updated'); //show notification that tasks have been updated
 }
 renderAllTasks(); //render tasks on page load
 
@@ -186,7 +182,6 @@ function updateHTML(
     id,
     status
 ) {
-    // debugger
     let color;
     priorityItemValue === 'High Priority'
         ? (color = 'red')
@@ -212,13 +207,14 @@ function updateHTML(
         <div class="taskMenu flex column hidden">
             <button class="moveToProgress btnMove" id="inProgress">Move to In Progress</button>
             <button class="moveToDone btnMove" id="done">Move to Done</button>
+            <button class="deleteTask btnMove" id="delete">Delete Task<i class="fas fa-trash" style="margin-left: 5px;"></i></button>
         </div>
 
         <div class="taskTitle">${taskTitleValue}</div>
         <div class="taskDesc">${taskDescriptionValue}</div>
         <div class="taskFooter column">
             <div class="priority" style="color: ${color};">${priorityItemValue}</div>
-            <div class="dueDate">Due: ${new Date(dateInputValue).toDateString()}</div>
+            <div class="dueDate">Due: ${dateInputValue === '--' ? 'No due date' : new Date(dateInputValue).toDateString()}</div>
         </div>
     </div>
     `;
@@ -253,6 +249,49 @@ function showMenu(e) {
     if (!taskElement) return;
     const taskMenu = taskElement.querySelector('.taskMenu');
     taskMenu.classList.toggle('hidden');
+}
+
+// NOTIFICATION FUNCTION
+function notificationFunc(msg) {
+    notification.animate(
+        [
+            { transform: 'translateX(0)', opacity: 1 },
+            { transform: 'translateX(100px)', opacity: 0 },
+        ],
+        {
+            duration: 4000,
+            easing: 'ease-out',
+        }
+    );
+    // Set notification text content
+    notification.textContent = msg;
+    // Remove the hidden class to show the notification
+    notification.classList.remove('hidden');
+    // Hide notification after 2 seconds
+    setTimeout(() => {
+        notification.classList.add('hidden');
+    }, 4000);
+}
+
+function notificationFuncSecondary(msg) {
+    notificationSecondary.animate(
+        [
+            { transform: 'translateX(0)', opacity: 1 },
+            { transform: 'translateX(100px)', opacity: 0 },
+        ],
+        {
+            duration: 4000,
+            easing: 'ease-out',
+        }
+    );
+    // Set notification text content
+    notificationSecondary.textContent = msg;
+    // Remove the hidden class to show the notification
+    notificationSecondary.classList.remove('hidden');
+    // Hide notification after 2 seconds
+    setTimeout(() => {
+        notificationSecondary.classList.add('hidden');
+    }, 4000);
 }
 
 function numOfTasksFunc() {
@@ -314,6 +353,10 @@ function moveTask(taskId, newStatus) {
         // Re-render everything
         renderAllTasks();
     }
+
+    newStatus === 'delete' && notificationFuncSecondary('Deleted task'); //notification function returns 'Deleted task'
+    newStatus !== 'delete' &&
+        notificationFuncSecondary(`Moved task to ${newStatus}`); //notification function returns 'Moved task to newStatus' if newStatus is not delete
 }
 
 //show menu output will be implemented here
@@ -330,6 +373,9 @@ document.querySelectorAll('.groupBtnDisplay').forEach((item) =>
     item.addEventListener('click', function () {
         // Get section name (toDo, inProgress, or done) from parent section's first class
         tasks[this.closest('section').classList[0]] = [];
+        notificationFuncSecondary(
+            `Cleared ${this.closest('section').classList[0]} tasks`
+        ); //show notification that tasks have been cleared
         renderAllTasks();
     })
 );
