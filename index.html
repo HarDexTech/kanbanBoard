@@ -15,6 +15,7 @@
         />
     </head>
     <body>
+        <div class="display flex hidden">Please use a bigger screen</div>
         <div class="notification hidden"></div>
         <div class="notificationSecondary hidden"></div>
         <header class="header">
@@ -114,9 +115,13 @@
                             >
                                 <i class="fas fa-ellipsis-h"></i>
                             </button>
-                            <div class="groupBtnDisplay hidden" id="groupMenu1">
-                                <button>
+                            <div class="groupBtnDisplay flex column hidden" id="groupMenu1">
+                                <button class="clear">
                                     Clear All <i class="fas fa-trash"></i>
+                                </button>
+                                <button>
+                                    Search Task
+                                    <i class="fa-solid fa-magnifying-glass"></i>
                                 </button>
                             </div>
                         </div>
@@ -143,9 +148,13 @@
                             >
                                 <i class="fas fa-ellipsis-h"></i>
                             </button>
-                            <div class="groupBtnDisplay hidden" id="groupMenu2">
-                                <button>
+                            <div class="groupBtnDisplay flex column hidden" id="groupMenu2">
+                                <button class="clear">
                                     Clear All <i class="fas fa-trash"></i>
+                                </button>
+                                <button>
+                                    Search Task
+                                    <i class="fa-solid fa-magnifying-glass"></i>
                                 </button>
                             </div>
                         </div>
@@ -172,9 +181,13 @@
                             >
                                 <i class="fas fa-ellipsis-h"></i>
                             </button>
-                            <div class="groupBtnDisplay hidden" id="groupMenu3">
-                                <button>
+                            <div class="groupBtnDisplay flex column hidden" id="groupMenu3">
+                                <button class="clear">
                                     Clear All <i class="fas fa-trash"></i>
+                                </button>
+                                <button>
+                                    Search Task
+                                    <i class="fa-solid fa-magnifying-glass"></i>
                                 </button>
                             </div>
                         </div>
@@ -219,9 +232,7 @@
                     </select>
                 </div>
                 <div class="date">
-                    <label
-                        >Select due date</label
-                    >
+                    <label>Select due date</label>
                     <div class="row">
                         <div>
                             <label for="mm">MM</label>

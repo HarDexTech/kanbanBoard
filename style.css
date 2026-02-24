@@ -451,3 +451,21 @@ select:focus {
     box-shadow: var(--shadow-lg);
     z-index: 1000;
 }
+
+@media screen and (max-width: 800px) {
+    body {
+        background-color: #000 !important;
+        display: flex;
+        height: 100vh;
+        align-items: center;
+        justify-content: center;
+    }
+    *:not(body, html, .display, .flex) {
+        display: none !important;
+    }
+    .display {
+        display: flex !important;
+        color: white;
+        font-size: 1.5rem;
+    }
+}

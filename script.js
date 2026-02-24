@@ -42,11 +42,7 @@ function validateModalInputFunc() {
     document.querySelector('.dateError').classList.add('hidden');
     document.querySelector('.dueDate').classList.add('hidden');
     dateInput = `${dateMM.value}-${dateDD.value}-${dateYYYY.value}`; //get date input in mm-dd-yyyy format
-    let d = new Date(dateInput);
-    let changeDateFormat = isNaN(d.getTime()) ? '--' : d;
-    // let changeDateFormat = new Date(dateInput) || '--'; //change date format to compare
-    // console.log(changeDateFormat);
-    // changeDateFormat == 'Invalid Date' ? (changeDateFormat = '--') : changeDateFormat; //get date input in mm-dd-yyyy format
+    let changeDateFormat = new Date(dateInput); //change date format to iso format to compare with current date
     let currentDate = new Date(); //get current date
 
     // validation checks
@@ -66,13 +62,24 @@ function validateModalInputFunc() {
         ((document.querySelector('.titleError').textContent =
             'Title cannot exceed 50 characters'),
         taskTitle.scrollIntoView({ behavior: 'smooth', block: 'start' }));
+    
+    if (dateInput === '--') {//if date input is empty, set dateInput to -- to display 'No due date' in the DOM
+        dateInput = '--';
+    } else {//if date input is not empty, validate date input
+        if (changeDateFormat.toString() === 'Invalid Date') {
+            document.querySelector('.dateError').classList.remove('hidden');
+            document.querySelector('.dateError').textContent =
+                'Please enter a valid date';
+            dateMM.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            return;
+        }
+    }
+
     if (changeDateFormat < currentDate) {
         //return error if due date is in the past
         document.querySelector('.dueDate').classList.remove('hidden');
         return; //ends the function
     }
-
-    dateInput === '--' ? (dateInput = '--') : dateInput; //get date input in mm-dd-yyyy format
 
     // Loop through tasks.toDo and create HTML for each
     toDOArrayFunc();
@@ -84,6 +91,8 @@ function validateModalInputFunc() {
     dateDD.value = '';
     dateMM.value = '';
     dateYYYY.value = '';
+
+    notificationFuncSecondary('New Task Created'); //show notification that new task has been created
 }
 
 //function to add task to tasks.toDo array
@@ -375,14 +384,21 @@ document.querySelectorAll('.menuBtn').forEach((siblingMenuBtn) =>
 );
 
 //clear tasks in each section when clear button is clicked and re-render tasks
-document.querySelectorAll('.groupBtnDisplay').forEach((item) =>
+document.querySelectorAll('.groupBtnDisplay .clear').forEach((item) =>
     item.addEventListener('click', function () {
         // Get section name (toDo, inProgress, or done) from parent section's first class
-        tasks[this.closest('section').classList[0]] = [];
-        notificationFuncSecondary(
-            `Cleared ${this.closest('section').classList[0]} tasks`
-        ); //show notification that tasks have been cleared
-        renderAllTasks();
+        let currentElement = tasks[this.closest('section').classList[0]];
+        if (currentElement.length === 0) {
+            return notificationFuncSecondary(
+                `No Tasks Found in ${this.closest('section').classList[0].toUpperCase()} Section`
+            );
+        } else {
+            tasks[this.closest('section').classList[0]] = [];//clear tasks in the current section
+            notificationFuncSecondary(
+                `Cleared ${this.closest('section').classList[0]} tasks`
+            ); //show notification that tasks have been cleared
+            renderAllTasks();
+        }
     })
 );
 
