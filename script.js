@@ -402,6 +402,23 @@ document.querySelectorAll('.groupBtnDisplay .clear').forEach((item) =>
     })
 );
 
+//toggle search input when search button is clicked
+document.querySelectorAll('.searchTaskBtn').forEach((x) => {
+    x.addEventListener('click', function () {
+        let attr = this.getAttribute("id");
+        document.getElementById(`searchContainer${attr.slice(-1)}`).classList.toggle('hidden');
+        document.getElementById(`groupMenu${attr.slice(-1)}`).classList.add('hidden');
+    })
+})
+
+//close search input when close button is clicked
+document.querySelectorAll('.closeSearchTask').forEach((x) => {
+    x.addEventListener('click', function () {
+        this.closest('.searchContainer').classList.add('hidden')
+    })
+})
+
+
 //event listeners
 addTaskBtn.addEventListener('click', showModalFunc);
 cancelModalBtn.addEventListener('click', closeModalFunc);
