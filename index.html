@@ -15,7 +15,7 @@
         />
     </head>
     <body>
-        <div class="display flex hidden">Please use a bigger screen</div>
+        <!-- <div class="display flex hidden">Please use a bigger screen</div> -->
         <div class="notification hidden"></div>
         <div class="notificationSecondary hidden"></div>
         <header class="header">
@@ -105,7 +105,8 @@
                     </div>
                     <div class="right flex gap">
                         <div class="addTask grid">
-                            <button type="button"><span>Add Task</span></button>
+                            <button type="button" class="addBtnText"><span>Add Task</span></button>
+                            <button type="button" class="addBtnPlus hidden"><span>+</span></button>
                         </div>
                         <div class="menuContainer">
                             <button
@@ -115,17 +116,42 @@
                             >
                                 <i class="fas fa-ellipsis-h"></i>
                             </button>
-                            <div class="groupBtnDisplay flex column hidden" id="groupMenu1">
+                            <div
+                                class="groupBtnDisplay flex column hidden"
+                                id="groupMenu1"
+                            >
                                 <button class="clear">
                                     Clear All <i class="fas fa-trash"></i>
                                 </button>
-                                <button>
+                                <button class="searchTaskBtn">
                                     Search Task
                                     <i class="fa-solid fa-magnifying-glass"></i>
                                 </button>
                             </div>
                         </div>
                     </div>
+                </div>
+                <div class="searchContainer hidden">
+                    <div class="searchInput">
+                        <i
+                            class="fa-solid fa-magnifying-glass"
+                            aria-hidden="true"
+                        ></i>
+                        <input
+                            type="text"
+                            name="searchInput"
+                            id="searchInput"
+                            placeholder="Search tasks..."
+                            aria-label="Search tasks"
+                        />
+                    </div>
+                    <button
+                        type="button"
+                        class="closeSearchTask"
+                        aria-label="Close search"
+                    >
+                        ×
+                    </button>
                 </div>
 
                 <div class="toDoTasks column gap delTask"></div>
@@ -148,17 +174,42 @@
                             >
                                 <i class="fas fa-ellipsis-h"></i>
                             </button>
-                            <div class="groupBtnDisplay flex column hidden" id="groupMenu2">
+                            <div
+                                class="groupBtnDisplay flex column hidden"
+                                id="groupMenu2"
+                            >
                                 <button class="clear">
                                     Clear All <i class="fas fa-trash"></i>
                                 </button>
-                                <button>
+                                <button class="searchTaskBtn">
                                     Search Task
                                     <i class="fa-solid fa-magnifying-glass"></i>
                                 </button>
                             </div>
                         </div>
                     </div>
+                </div>
+                <div class="searchContainer hidden">
+                    <div class="searchInput">
+                        <i
+                            class="fa-solid fa-magnifying-glass"
+                            aria-hidden="true"
+                        ></i>
+                        <input
+                            type="text"
+                            name="searchInput"
+                            id="searchInput"
+                            placeholder="Search tasks..."
+                            aria-label="Search tasks"
+                        />
+                    </div>
+                    <button
+                        type="button"
+                        class="closeSearchTask"
+                        aria-label="Close search"
+                    >
+                        ×
+                    </button>
                 </div>
 
                 <div class="inProgressTasks column gap delTask"></div>
@@ -181,17 +232,42 @@
                             >
                                 <i class="fas fa-ellipsis-h"></i>
                             </button>
-                            <div class="groupBtnDisplay flex column hidden" id="groupMenu3">
+                            <div
+                                class="groupBtnDisplay flex column hidden"
+                                id="groupMenu3"
+                            >
                                 <button class="clear">
                                     Clear All <i class="fas fa-trash"></i>
                                 </button>
-                                <button>
+                                <button class="searchTaskBtn">
                                     Search Task
                                     <i class="fa-solid fa-magnifying-glass"></i>
                                 </button>
                             </div>
                         </div>
                     </div>
+                </div>
+                <div class="searchContainer hidden">
+                    <div class="searchInput">
+                        <i
+                            class="fa-solid fa-magnifying-glass"
+                            aria-hidden="true"
+                        ></i>
+                        <input
+                            type="text"
+                            name="searchInput"
+                            id="searchInput"
+                            placeholder="Search tasks..."
+                            aria-label="Search tasks"
+                        />
+                    </div>
+                    <button
+                        type="button"
+                        class="closeSearchTask"
+                        aria-label="Close search"
+                    >
+                        ×
+                    </button>
                 </div>
 
                 <div class="doneTasks column gap delTask"></div>
