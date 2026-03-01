@@ -60,19 +60,19 @@ svg {
     font-size: 1.15rem;
 }
 header {
-    padding: 20px 50px;
+    position: sticky;
+    top: 0;
+    z-index: 1001;
+    padding: 15px 50px;
     box-shadow: var(--shadow-lg);
     display: flex;
     align-items: center;
     justify-content: space-between;
     font-weight: bolder;
     margin-bottom: var(--spacing-lg);
-    height: 65px;
+    height: fit-content;
     width: 100%;
-}
-.nav-bar {
-    display: flex;
-    align-items: center;
+    background: var(--card-light);
 }
 #btn-search {
     width: 100%;
@@ -296,9 +296,6 @@ select:focus {
 .hidden {
     display: none !important;
 }
-.row div {
-    line-height: 0;
-}
 .date {
     line-height: 3;
 }
@@ -401,6 +398,10 @@ select:focus {
 }
 .github-corner {
     transform: scale(2);
+    padding: 0 0 0 var(--spacing-sm);
+    position: absolute;
+    top: 10px;
+    right: 20px;
     & i {
         font-size: var(--spacing-md) !important;
         color: black;
@@ -453,23 +454,70 @@ select:focus {
     z-index: 1000;
 }
 
+/* Tablet styling (768px - 1024px) */
+@media screen and (min-width: 481px) and (max-width: 768px) {
+    header {
+        padding: 12px 20px;
+    }
+    .logo {
+        height: 32px;
+        width: 32px;
+    }
+    .title {
+        font-size: 0.95rem;
+    }
+    .search {
+        width: 100%;
+        max-width: 300px;
+    }
+    .nav-bar {
+        flex-direction: row;
+        align-items: center;
+    }
+}
+
 @media screen and (max-width: 1024px) {
+    header {
+        padding: 12px 20px;
+    }
+    .nav-bar {
+        flex-direction: column;
+        gap: var(--spacing-sm);
+    }
+    .logo {
+        height: 35px;
+        width: 35px;
+    }
+    .title {
+        font-size: 1rem;
+    }
     main {
         flex-direction: column;
         padding: 0;
     }
-    .toDo, .inProgress, .done {
+    .toDo,
+    .inProgress,
+    .done {
         width: 100%;
     }
-    .searchInput {
-        width: 5rem;
+
+    .search {
+        width: 100%;
+        max-width: 100%;
+        order: 3;
     }
+
+    .searchInput {
+        width: 100% !important;
+        flex: 1;
+    }
+
     .headFlex {
         align-items: flex-start;
         gap: var(--spacing-sm);
     }
-    .left{
-        gap: calc(var(--gap)/2);
+    .left {
+        gap: calc(var(--gap) / 2);
     }
 }
 @media screen and (max-width: 480px) {
@@ -477,34 +525,64 @@ select:focus {
         flex-direction: column;
         padding: 0;
     }
-    .toDo, .inProgress, .done {
+    .toDo,
+    .inProgress,
+    .done {
         width: 100%;
-    }
-    .searchInput {
-        width: 5rem;
     }
     .headFlex {
         align-items: flex-start;
         gap: var(--spacing-sm);
     }
-    .left{
-        gap: calc(var(--gap)/2);
+    .left {
+        gap: calc(var(--gap) / 2);
     }
     .addBtnText {
         display: none;
     }
-     .addBtnPlus {
+    .addBtnPlus {
         display: block !important;
     }
-}
-
-.searchContainer {
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-sm);
-    padding: 0 30px 20px 30px;
-    width: 100%;
-    box-sizing: border-box;
+    .title {
+        display: none !important;
+    }
+    header {
+        padding: 10px 15px;
+    }
+    .logo {
+        height: 30px;
+        width: 30px;
+    }
+    .nav-bar {
+        gap: var(--spacing-xs);
+        flex-direction: row !important;
+    }
+    .search {
+        display: none !important;
+        width: 100%;
+        max-width: 100%;
+        order: 3;
+    }
+    .search:not(.hidden) {
+        display: flex !important;
+        animation: slideDown 0.3s ease-out;
+    }
+    .searchInput {
+        width: 100% !important;
+        min-width: unset;
+    }
+    .searchBar {
+        gap: 6px;
+        & button {
+            width: 36px;
+            height: 36px;
+            min-width: 36px;
+            font-size: 1rem;
+        }
+    }
+    .github-corner{
+        display: none !important;
+    }
 }
 
 .searchInput {
@@ -517,12 +595,14 @@ select:focus {
     border: 2px solid #e0e0e0;
     transition: var(--transition);
     z-index: 100;
+    min-width: 200px;
     & i {
         position: absolute;
         left: var(--spacing-md);
         color: var(--text-secondary);
         font-size: 1rem;
         pointer-events: none;
+        transition: var(--transition);
     }
     & input {
         flex: 1;
@@ -572,4 +652,59 @@ select:focus {
     &:active {
         transform: scale(0.95);
     }
+}
+.searchBar {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    position: relative;
+    & button {
+        width: 40px;
+        height: 40px;
+        min-width: 40px;
+        border: 2px solid #e0e0e0;
+        background: white;
+        border-radius: var(--border-radius);
+        font-size: 1.2rem;
+        color: var(--text-secondary);
+        cursor: pointer;
+        transition: var(--transition);
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        &:hover {
+            background: var(--background-light);
+            border-color: var(--primary);
+            color: var(--primary);
+            transform: scale(1.05);
+        }
+        &:active {
+            transform: scale(0.95);
+        }
+    }
+
+    .searchTaskBtn i {
+        font-size: 1rem;
+    }
+
+    .clearSearchBtn i {
+        font-size: 1.2rem;
+    }
+}
+
+/* Clear search button specific styles */
+.clearSearchBtn {
+    &:hover {
+        border-color: var(--danger) !important;
+        color: var(--danger) !important;
+    }
+}
+
+/* Header search styling */
+.search {
+    gap: var(--spacing-sm);
+    align-items: stretch;
+    padding: 0;
+    max-width: 400px;
 }

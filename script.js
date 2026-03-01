@@ -62,10 +62,12 @@ function validateModalInputFunc() {
         ((document.querySelector('.titleError').textContent =
             'Title cannot exceed 50 characters'),
         taskTitle.scrollIntoView({ behavior: 'smooth', block: 'start' }));
-    
-    if (dateInput === '--') {//if date input is empty, set dateInput to -- to display 'No due date' in the DOM
+
+    if (dateInput === '--') {
+        //if date input is empty, set dateInput to -- to display 'No due date' in the DOM
         dateInput = '--';
-    } else {//if date input is not empty, validate date input
+    } else {
+        //if date input is not empty, validate date input
         if (changeDateFormat.toString() === 'Invalid Date') {
             document.querySelector('.dateError').classList.remove('hidden');
             document.querySelector('.dateError').textContent =
@@ -393,7 +395,7 @@ document.querySelectorAll('.groupBtnDisplay .clear').forEach((item) =>
                 `No Tasks Found in ${this.closest('section').classList[0].toUpperCase()} Section`
             );
         } else {
-            tasks[this.closest('section').classList[0]] = [];//clear tasks in the current section
+            tasks[this.closest('section').classList[0]] = []; //clear tasks in the current section
             notificationFuncSecondary(
                 `Cleared ${this.closest('section').classList[0]} tasks`
             ); //show notification that tasks have been cleared
@@ -402,22 +404,112 @@ document.querySelectorAll('.groupBtnDisplay .clear').forEach((item) =>
     })
 );
 
-//toggle search input when search button is clicked
-document.querySelectorAll('.searchTaskBtn').forEach((x) => {
-    x.addEventListener('click', function () {
-        let attr = this.getAttribute("id");
-        document.getElementById(`searchContainer${attr.slice(-1)}`).classList.toggle('hidden');
-        document.getElementById(`groupMenu${attr.slice(-1)}`).classList.add('hidden');
-    })
-})
+//
+document.querySelector('.searchTaskBtn').addEventListener('click', function () {
+    let input = document.getElementById('searchInput').value.toLowerCase();
+    if (input.trim() === '')
+        return notificationFuncSecondary('Please enter a search term');
+    // let foundTask = tasks.toDo.find((task) =>
+    //     task.title.toLowerCase().includes(input)
+    // );
+    // if (!foundTask) {
+    //     foundTask = tasks.inProgress.find((task) =>
+    //         task.title.toLowerCase().includes(input)
+    //     );
+    // }
+    // if (!foundTask) {
+    //     foundTask = tasks.done.find((task) =>
+    //         task.title.toLowerCase().includes(input)
+    //     );
+    // }
+    // if (foundTask) {
+    //     notificationFuncSecondary(`Found task: ${foundTask.title}`);
+    // } else {
+    //     notificationFuncSecondary('No matching tasks found');
+    // }
 
-//close search input when close button is clicked
-document.querySelectorAll('.closeSearchTask').forEach((x) => {
-    x.addEventListener('click', function () {
-        this.closest('.searchContainer').classList.add('hidden')
-    })
-})
+    const [foundTaskInToDo, foundTaskInProgress, foundTaskInDone] = [
+        tasks.toDo.find((task) => task.title.toLowerCase().includes(input)),
+        tasks.inProgress.find((task) =>
+            task.title.toLowerCase().includes(input)
+        ),
+        tasks.done.find((task) => task.title.toLowerCase().includes(input)),
+    ];
 
+    let filteredTasks = { toDo: [], inProgress: [], done: [] };
+    if (foundTaskInToDo) {
+        filteredTasks.toDo.push(foundTaskInToDo);
+    }
+    if (foundTaskInProgress) {
+        filteredTasks.inProgress.push(foundTaskInProgress);
+    }
+    if (foundTaskInDone) {
+        filteredTasks.done.push(foundTaskInDone);
+    }
+
+    /********************************clear all menus before re-rendering******************************/
+    toDoTasks.innerHTML = '';
+    inProgressTasks.innerHTML = '';
+    doneTasks.innerHTML = '';
+
+    /********************************render all tasks from tasks object using loops**********************/
+    //toDo loop
+    filteredTasks.toDo.forEach((task) => {
+        updateHTML(
+            task.title,
+            task.description,
+            task.priority,
+            task.dueDate,
+            task.id,
+            'toDo'
+        );
+    });
+
+    //inProgress loop
+    filteredTasks.inProgress.forEach((task) => {
+        updateHTML(
+            task.title,
+            task.description,
+            task.priority,
+            task.dueDate,
+            task.id,
+            'inProgress'
+        );
+    });
+
+    //done loop
+    filteredTasks.done.forEach((task) => {
+        updateHTML(
+            task.title,
+            task.description,
+            task.priority,
+            task.dueDate,
+            task.id,
+            'done'
+        );
+    });
+
+    //hide all menus after re-rendering in done section
+    document
+        .querySelectorAll('.doneTasks .task .menu')
+        .forEach((hide) => hide.classList.add('hidden'));
+
+    //hide move to done button in in progress section
+    document
+        .querySelectorAll('.inProgressTasks .task .taskMenu .moveToProgress')
+        .forEach((btn) => btn.classList.add('hidden'));
+
+    //add strike through to done task titles
+    document
+        .querySelectorAll('.doneTasks .taskTitle')
+        .forEach((addStrikeElementsToDoneTitle) =>
+            addStrikeElementsToDoneTitle.classList.add('strike')
+        );
+
+    closeModalFunc(); //close task modal
+    numOfTasksFunc(); //update number of tasks in each section
+    notificationFunc('Tasks Updated'); //show notification that tasks have been updated
+});
 
 //event listeners
 addTaskBtn.addEventListener('click', showModalFunc);

@@ -19,7 +19,7 @@
         <div class="notification hidden"></div>
         <div class="notificationSecondary hidden"></div>
         <header class="header">
-            <div class="nav-bar gap">
+            <div class="nav-bar flex row gap">
                 <div class="logo">
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -80,7 +80,39 @@
                     </svg>
                 </div>
                 <div class="title">Kanban Board</div>
+
+                <div class="search flex row">
+                    <div class="searchInput">
+                        <i
+                            class="fa-solid fa-magnifying-glass"
+                            aria-hidden="true"
+                        ></i>
+                        <input
+                            type="text"
+                            name="searchInput"
+                            id="searchInput"
+                            placeholder="Search tasks..."
+                            aria-label="Search tasks"
+                        />
+                    </div>
+                    <div class="searchBar">
+                        <button
+                            class="searchTaskBtn"
+                            id="searchTaskBtn3"
+                            aria-label="Search tasks"
+                        >
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </button>
+                        <button
+                            class="clearSearchBtn"
+                            aria-label="Clear search"
+                        >
+                            <i class="fa-solid fa-times"></i>
+                        </button>
+                    </div>
+                </div>
             </div>
+
             <!-- GitHub -->
             <div class="github-corner">
                 <a
@@ -105,8 +137,12 @@
                     </div>
                     <div class="right flex gap">
                         <div class="addTask grid">
-                            <button type="button" class="addBtnText"><span>Add Task</span></button>
-                            <button type="button" class="addBtnPlus hidden"><span>+</span></button>
+                            <button type="button" class="addBtnText">
+                                <span>Add Task</span>
+                            </button>
+                            <button type="button" class="addBtnPlus hidden">
+                                <span>+</span>
+                            </button>
                         </div>
                         <div class="menuContainer">
                             <button
@@ -123,35 +159,9 @@
                                 <button class="clear">
                                     Clear All <i class="fas fa-trash"></i>
                                 </button>
-                                <button class="searchTaskBtn" id="searchTaskBtn1">
-                                    Search Task
-                                    <i class="fa-solid fa-magnifying-glass"></i>
-                                </button>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="searchContainer hidden" id="searchContainer1">
-                    <div class="searchInput">
-                        <i
-                            class="fa-solid fa-magnifying-glass"
-                            aria-hidden="true"
-                        ></i>
-                        <input
-                            type="text"
-                            name="searchInput"
-                            id="searchInput"
-                            placeholder="Search tasks..."
-                            aria-label="Search tasks"
-                        />
-                    </div>
-                    <button
-                        type="button"
-                        class="closeSearchTask"
-                        aria-label="Close search"
-                    >
-                        ×
-                    </button>
                 </div>
 
                 <div class="toDoTasks column gap delTask"></div>
@@ -181,35 +191,9 @@
                                 <button class="clear">
                                     Clear All <i class="fas fa-trash"></i>
                                 </button>
-                                <button class="searchTaskBtn" id="searchTaskBtn2">
-                                    Search Task
-                                    <i class="fa-solid fa-magnifying-glass"></i>
-                                </button>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="searchContainer hidden" id="searchContainer2">
-                    <div class="searchInput">
-                        <i
-                            class="fa-solid fa-magnifying-glass"
-                            aria-hidden="true"
-                        ></i>
-                        <input
-                            type="text"
-                            name="searchInput"
-                            id="searchInput"
-                            placeholder="Search tasks..."
-                            aria-label="Search tasks"
-                        />
-                    </div>
-                    <button
-                        type="button"
-                        class="closeSearchTask"
-                        aria-label="Close search"
-                    >
-                        ×
-                    </button>
                 </div>
 
                 <div class="inProgressTasks column gap delTask"></div>
@@ -239,35 +223,9 @@
                                 <button class="clear">
                                     Clear All <i class="fas fa-trash"></i>
                                 </button>
-                                <button class="searchTaskBtn" id="searchTaskBtn3">
-                                    Search Task
-                                    <i class="fa-solid fa-magnifying-glass"></i>
-                                </button>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="searchContainer hidden" id="searchContainer3">
-                    <div class="searchInput">
-                        <i
-                            class="fa-solid fa-magnifying-glass"
-                            aria-hidden="true"
-                        ></i>
-                        <input
-                            type="text"
-                            name="searchInput"
-                            id="searchInput"
-                            placeholder="Search tasks..."
-                            aria-label="Search tasks"
-                        />
-                    </div>
-                    <button
-                        type="button"
-                        class="closeSearchTask"
-                        aria-label="Close search"
-                    >
-                        ×
-                    </button>
                 </div>
 
                 <div class="doneTasks column gap delTask"></div>
