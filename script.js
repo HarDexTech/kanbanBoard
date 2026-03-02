@@ -610,6 +610,8 @@ document.querySelector('#searchInput').addEventListener('input', function () {
 document
     .querySelector('.clearSearchBtn')
     .addEventListener('click', function () {
+        if (document.getElementById('searchInput').value.trim() === '')
+            return notificationFuncSecondary('Search input is already empty');
         document.getElementById('searchInput').value = '';
         renderAllTasks();
         notificationFuncSecondary('Cleared search results'); //show notification that search results have been cleared
