@@ -29,16 +29,17 @@ let tasks = JSON.parse(localStorage.getItem('data')) || {
     done: [],
 };
 
-function getAndShowUserName() {
+function getAndShowUserName(name) {
+    name = !!name ? name : 'User'; //if name is falsy, set name to 'User' to prevent showing 'Good Morning/Afternoon/Evening, !' in the DOM
     //Get the current hour in 24-hour format
     const hour = new Date().getHours();
 
     if (hour >= 0 && hour < 12) {
-        showGreetingMsg.textContent = `Good Morning, ${localStorage.getItem('userName').toUpperCase()}!`;
+        showGreetingMsg.textContent = `Good Morning, ${name.toUpperCase()}!`;
     } else if (hour >= 12 && hour < 17) {
-        showGreetingMsg.textContent = `Good Afternoon, ${localStorage.getItem('userName').toUpperCase()}!`;
+        showGreetingMsg.textContent = `Good Afternoon, ${name.toUpperCase()}!`;
     } else {
-        showGreetingMsg.textContent = `Good Evening, ${localStorage.getItem('userName').toUpperCase()}!`;
+        showGreetingMsg.textContent = `Good Evening, ${name.toUpperCase()}!`;
     }
 
     showGreetingMsg.classList.remove('hidden');
@@ -48,7 +49,7 @@ function getAndShowUserName() {
 if (!localStorage.getItem('userName')) {
     greetUser.classList.remove('hidden');
 } else {
-    getAndShowUserName();
+    getAndShowUserName(localStorage.getItem('userName'));
 }
 //event listener to close input when close is clicked
 closeGreetBtn.addEventListener('click', function () {
@@ -56,13 +57,13 @@ closeGreetBtn.addEventListener('click', function () {
 });
 //event listener to submit name input, save to localstorage and show greeting message
 submitNameBtn.addEventListener('click', function () {
-    userNameInput.value.trim() === '' &&
-        notificationFuncSecondary('Name Input is Empty');
-    userNameInput.value.length > 20 &&
+    if (userNameInput.value.length > 20) {
         notificationFuncSecondary('Name Input is Too Long');
+        return;
+    }
 
     localStorage.setItem('userName', userNameInput.value);
-    getAndShowUserName();
+    getAndShowUserName(localStorage.getItem('userName'));
     greetUser.classList.add('hidden');
 });
 
