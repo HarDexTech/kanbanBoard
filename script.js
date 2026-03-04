@@ -15,12 +15,56 @@ const inProgressTasks = document.querySelector('.inProgressTasks');
 const doneTasks = document.querySelector('.doneTasks');
 const notification = document.querySelector('.notification');
 const notificationSecondary = document.querySelector('.notificationSecondary');
+const greetUser = document.querySelector('.greetUser');
+const userNameInput = document.querySelector('#nameInput');
+const submitNameBtn = document.querySelector('#submitName');
+const closeGreetBtn = document.querySelector('.greetContainer .close');
+const showGreetingMsg = document.querySelector('.showGreeting');
 let dateInput;
+
+//get tasks object from localstorage or initialize if not present
 let tasks = JSON.parse(localStorage.getItem('data')) || {
     toDo: [],
     inProgress: [],
     done: [],
-}; //get tasks object from localstorage or initialize if not present
+};
+
+function getAndShowUserName() {
+    //Get the current hour in 24-hour format
+    const hour = new Date().getHours();
+
+    if (hour >= 0 && hour < 12) {
+        showGreetingMsg.textContent = `Good Morning, ${localStorage.getItem('userName').toUpperCase()}!`;
+    } else if (hour >= 12 && hour < 17) {
+        showGreetingMsg.textContent = `Good Afternoon, ${localStorage.getItem('userName').toUpperCase()}!`;
+    } else {
+        showGreetingMsg.textContent = `Good Evening, ${localStorage.getItem('userName').toUpperCase()}!`;
+    }
+
+    showGreetingMsg.classList.remove('hidden');
+}
+
+//check if userName is stored in localstorage, if not show greetUser modal, if yes show greeting message with userName
+if (!localStorage.getItem('userName')) {
+    greetUser.classList.remove('hidden');
+} else {
+    getAndShowUserName();
+}
+//event listener to close input when close is clicked
+closeGreetBtn.addEventListener('click', function () {
+    greetUser.classList.add('hidden');
+});
+//event listener to submit name input, save to localstorage and show greeting message
+submitNameBtn.addEventListener('click', function () {
+    userNameInput.value.trim() === '' &&
+        notificationFuncSecondary('Name Input is Empty');
+    userNameInput.value.length > 20 &&
+        notificationFuncSecondary('Name Input is Too Long');
+
+    localStorage.setItem('userName', userNameInput.value);
+    getAndShowUserName();
+    greetUser.classList.add('hidden');
+});
 
 // functions
 //remove hidden class to show modal
@@ -380,36 +424,7 @@ function moveTask(taskId, newStatus) {
         notificationFuncSecondary(`Moved task to ${newStatus}`); //notification function returns 'Moved task to newStatus' if newStatus is not delete
 }
 
-//show menu output will be implemented here
-document.querySelectorAll('.menuBtn').forEach((siblingMenuBtn) =>
-    siblingMenuBtn.addEventListener('click', function () {
-        this.closest('.menuContainer')
-            .querySelector('.groupBtnDisplay')
-            .classList.toggle('hidden');
-    })
-);
-
-//clear tasks in each section when clear button is clicked and re-render tasks
-document.querySelectorAll('.groupBtnDisplay .clear').forEach((item) =>
-    item.addEventListener('click', function () {
-        // Get section name (toDo, inProgress, or done) from parent section's first class
-        let currentElement = tasks[this.closest('section').classList[0]];
-        if (currentElement.length === 0) {
-            return notificationFuncSecondary(
-                `No Tasks Found in ${this.closest('section').classList[0].toUpperCase()} Section`
-            );
-        } else {
-            tasks[this.closest('section').classList[0]] = []; //clear tasks in the current section
-            notificationFuncSecondary(
-                `Cleared ${this.closest('section').classList[0]} tasks`
-            ); //show notification that tasks have been cleared
-            renderAllTasks();
-        }
-    })
-);
-
-//search functionality to find tasks by title
-document.querySelector('.searchTaskBtn').addEventListener('click', function () {
+function searchFunction() {
     let input = document.getElementById('searchInput').value.toLowerCase();
     if (input.trim() === '')
         return notificationFuncSecondary('Please enter a search term');
@@ -477,10 +492,6 @@ document.querySelector('.searchTaskBtn').addEventListener('click', function () {
         );
     });
 
-    notificationFuncSecondary(
-        `Found ${filteredTasks.toDo.length + filteredTasks.inProgress.length + filteredTasks.done.length} task(s) matching "${input}"`
-    ); //show notification with number of tasks found
-
     //hide all menus after re-rendering in done section
     document
         .querySelectorAll('.doneTasks .task .menu')
@@ -501,108 +512,47 @@ document.querySelector('.searchTaskBtn').addEventListener('click', function () {
     closeModalFunc(); //close task modal
     numOfTasksFunc(); //update number of tasks in each section
     notificationFunc('Tasks Updated'); //show notification that tasks have been updated
+}
+
+//show menu output will be implemented here
+document.querySelectorAll('.menuBtn').forEach((siblingMenuBtn) =>
+    siblingMenuBtn.addEventListener('click', function () {
+        this.closest('.menuContainer')
+            .querySelector('.groupBtnDisplay')
+            .classList.toggle('hidden');
+    })
+);
+
+//clear tasks in each section when clear button is clicked and re-render tasks
+document.querySelectorAll('.groupBtnDisplay .clear').forEach((item) =>
+    item.addEventListener('click', function () {
+        // Get section name (toDo, inProgress, or done) from parent section's first class
+        let currentElement = tasks[this.closest('section').classList[0]];
+        if (currentElement.length === 0) {
+            return notificationFuncSecondary(
+                `No Tasks Found in ${this.closest('section').classList[0].toUpperCase()} Section`
+            );
+        } else {
+            tasks[this.closest('section').classList[0]] = []; //clear tasks in the current section
+            notificationFuncSecondary(
+                `Cleared ${this.closest('section').classList[0]} tasks`
+            ); //show notification that tasks have been cleared
+            renderAllTasks();
+        }
+    })
+);
+
+//search functionality to find tasks by title
+document.querySelector('.searchTaskBtn').addEventListener('click', function () {
+    searchFunction();
 });
 
 //debounce search input by 100ms to optimize search performance and prevent excessive re-rendering while typing
 document.querySelector('#searchInput').addEventListener('input', function () {
     setTimeout(() => {
-        let input = document.getElementById('searchInput').value.toLowerCase();
-        if (input.trim() === '')
-            return notificationFuncSecondary('Please enter a search term');
-
-        const [foundTaskInToDo, foundTaskInProgress, foundTaskInDone] = [
-            tasks.toDo.filter((task) =>
-                task.title.toLowerCase().includes(input)
-            ),
-            tasks.inProgress.filter((task) =>
-                task.title.toLowerCase().includes(input)
-            ),
-            tasks.done.filter((task) =>
-                task.title.toLowerCase().includes(input)
-            ),
-        ];
-
-        let filteredTasks = { toDo: [], inProgress: [], done: [] };
-        if (foundTaskInToDo.length > 0) {
-            filteredTasks.toDo.push(...foundTaskInToDo);
-        }
-        if (foundTaskInProgress.length > 0) {
-            filteredTasks.inProgress.push(...foundTaskInProgress);
-        }
-        if (foundTaskInDone.length > 0) {
-            filteredTasks.done.push(...foundTaskInDone);
-        }
-        if (!foundTaskInDone && !foundTaskInProgress && !foundTaskInToDo)
-            return notificationFuncSecondary('No task found');
-
-        /********************************clear all menus before re-rendering******************************/
-        toDoTasks.innerHTML = '';
-        inProgressTasks.innerHTML = '';
-        doneTasks.innerHTML = '';
-
-        /********************************render all tasks from tasks object using loops**********************/
-        //toDo loop
-        filteredTasks.toDo.forEach((task) => {
-            updateHTML(
-                task.title,
-                task.description,
-                task.priority,
-                task.dueDate,
-                task.id,
-                'toDo'
-            );
-        });
-
-        //inProgress loop
-        filteredTasks.inProgress.forEach((task) => {
-            updateHTML(
-                task.title,
-                task.description,
-                task.priority,
-                task.dueDate,
-                task.id,
-                'inProgress'
-            );
-        });
-
-        //done loop
-        filteredTasks.done.forEach((task) => {
-            updateHTML(
-                task.title,
-                task.description,
-                task.priority,
-                task.dueDate,
-                task.id,
-                'done'
-            );
-        });
-
-        notificationFuncSecondary(
-            `Found ${filteredTasks.toDo.length + filteredTasks.inProgress.length + filteredTasks.done.length} task(s) matching "${input}"`
-        ); //show notification with number of tasks found
-
-        //hide all menus after re-rendering in done section
-        document
-            .querySelectorAll('.doneTasks .task .menu')
-            .forEach((hide) => hide.classList.add('hidden'));
-
-        //hide move to done button in in progress section
-        document
-            .querySelectorAll(
-                '.inProgressTasks .task .taskMenu .moveToProgress'
-            )
-            .forEach((btn) => btn.classList.add('hidden'));
-
-        //add strike through to done task titles
-        document
-            .querySelectorAll('.doneTasks .taskTitle')
-            .forEach((addStrikeElementsToDoneTitle) =>
-                addStrikeElementsToDoneTitle.classList.add('strike')
-            );
-
-        closeModalFunc(); //close task modal
-        numOfTasksFunc(); //update number of tasks in each section
-        notificationFunc('Tasks Updated'); //show notification that tasks have been updated
+        if (document.getElementById('searchInput').value.trim() === '')
+            return renderAllTasks();
+        searchFunction();
     }, 100); //debounce search input by 100ms});
 });
 
