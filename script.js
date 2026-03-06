@@ -29,6 +29,7 @@ let tasks = JSON.parse(localStorage.getItem('data')) || {
     done: [],
 };
 
+//function to get current hour and show greeting message based on time of day and userName
 function getAndShowUserName(name) {
     name = !!name ? name : 'User'; //if name is falsy, set name to 'User' to prevent showing 'Good Morning/Afternoon/Evening, !' in the DOM
     //Get the current hour in 24-hour format
@@ -65,6 +66,11 @@ submitNameBtn.addEventListener('click', function () {
     localStorage.setItem('userName', userNameInput.value);
     getAndShowUserName(localStorage.getItem('userName'));
     greetUser.classList.add('hidden');
+});
+userNameInput.addEventListener('keypress', function (e) {
+    if (e.key === 'Enter') {
+        submitNameBtn.click();
+    }
 });
 
 // functions

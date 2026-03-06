@@ -36,14 +36,6 @@ body {
     background-color: var(--bg-light);
     line-height: 1.6;
 }
-
-/* Dark theme styles applied when the OS is in dark mode
-@media (prefers-color-scheme: dark) {
-  body {
-    background-color: #000;
-    color: #fff;
-  }
-} */
 .logo {
     height: 40px;
     width: 40px;
@@ -718,13 +710,12 @@ select:focus {
 .greetContainer {
     background: var(--card-light);
     z-index: 100000;
-    padding: 40px;
+    padding: 0 40px 40px 40px;
     border-radius: var(--border-radius);
     box-shadow: var(--shadow-lg);
     text-align: center;
     & input {
-        width: 100%;
-        max-width: 300px;
+        width: 300px;
         padding: var(--spacing-md);
         font-size: 1rem;
         border: 1px solid #e0e0e0;
@@ -737,9 +728,10 @@ select:focus {
         }
     }
     & .close{
-        position: relative;
-        /* top: 20px; */
-        right: -50%;
+        position-anchor: --toRight;
+        position: absolute;
+        left: calc(anchor(right) - 40px);
+        top: calc(anchor(top) + 10px);
         width: 30px;
         height: 30px;
         border-radius: 50%;
@@ -769,21 +761,53 @@ select:focus {
         color: white;
         cursor: pointer;
         transition: var(--transition);
-        /* width: 100%; */
+        width: 300px;
         &:hover {
             background: #227bc3;
         }
     }
     & .greetInput{
         display: flex;
-        justify-content: center;
-        align-items: center;
+        flex-direction: column;
+        align-items: start;
         gap: var(--spacing-sm);
     }
 }
 .showGreeting{
-    padding: 0 0 10px 30px;
+    padding: 0 0 10px 80px;
     border-radius: var(--border-radius);
     z-index: 1000000;
     cursor: pointer;
+    @media screen and (max-width: 1024px) {
+        padding: 0 0 10px 30px;
+        
+    }
+}
+.wave {
+    font-size: 3.5rem;
+    animation: waveAnimation 2s infinite;
+    transform-origin: 70% 70%;
+}
+@keyframes waveAnimation {
+    0% { transform: rotate(0deg); }
+    15% { transform: rotate(14deg); }
+    30% { transform: rotate(-8deg); }
+    40% { transform: rotate(14deg); }
+    50% { transform: rotate(-4deg); }
+    60% { transform: rotate(10deg); }
+    70% { transform: rotate(0deg); }
+    100% { transform: rotate(0deg); }
+}
+.bg {
+    width: calc(100% + 80px);
+    background-color: rgb(18 130 243 / 0.1);
+    height: 100%;
+    border-radius: 3% 3% 0 0;
+    anchor-name: --toRight;
+    background-image: radial-gradient(circle at 2px 2px, currentColor 1px, transparent 0);
+    background-size: 24px 24px;
+}
+.greetTitle span:not(.hand) {
+    background: white;
+    width: calc(100%);
 }
