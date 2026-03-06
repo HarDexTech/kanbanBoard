@@ -394,6 +394,9 @@ select:focus {
         font-size: var(--spacing-md) !important;
         color: black;
     }
+    @media screen and (max-width: 580px) {
+        display: none !important;
+    }
 }
 #groupBtn1 {
     anchor-name: --position-menu;
