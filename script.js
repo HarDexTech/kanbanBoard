@@ -593,55 +593,6 @@ document
         notificationFuncSecondary('Cleared search results'); //show notification that search results have been cleared
     });
 
-/* export tasks as json
-exportBtn.addEventListener('click', function () {
-debugger;
-    const dataStr =
-        'data:text/json;charset=utf-8,'
-        encodeURIComponent(JSON.stringify(localStorage.getItem("data")));
-    const link = document.createElement('a');
-    link.href = dataStr;
-    link.download = 'tasks.json';
-    document.body.appendChild(link);
-    link.click();
-    console.log(link, dataStr);
-    document.body.removeChild(link);
-    notificationFuncSecondary('Exported tasks to file'); //show notification that tasks have been exported
-    importExportContainer.classList.add('hidden'); //hide import export container after exporting
-});
-
-export tasks as json
-exportBtn.addEventListener('click', function () {
-    const data = JSON.stringify(tasks);
-    const blob = new Blob([data], {type: 'application/json'});
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.download = 'tasks.json'
-    link.click();
-});
-
-import tasks from json file and re-render tasks
-importBtn.addEventListener('click', function () {
-    const input = document.createElement('input');
-    input.type = 'file';
-    input.accept = 'application/json';
-    input.onchange = function (e) {
-        const file = e.target.files[0];
-        const reader = new FileReader();
-        reader.onload = function (e) {
-            const importedTasks = JSON.parse(e.target.result);
-            Object.keys(importedTasks).forEach((section) => {
-                tasks[section] = importedTasks[section];
-            });
-            renderAllTasks();
-            notificationFuncSecondary('Imported tasks from file'); //show notification that tasks have been imported
-        };
-        reader.readAsText(file);
-    };
-    input.click();
-    importExportContainer.classList.add('hidden'); //hide import export container after importing
-}); */
-
 // Export tasks as JSON
 exportBtn.addEventListener('click', function () {
     // Ensure we are stringifying the actual object, not a string from localStorage
