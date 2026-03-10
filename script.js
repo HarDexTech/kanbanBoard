@@ -20,7 +20,16 @@ const userNameInput = document.querySelector('#nameInput');
 const submitNameBtn = document.querySelector('#submitName');
 const closeGreetBtn = document.querySelector('.greetContainer .close');
 const showGreetingMsg = document.querySelector('.showGreeting');
+const importExportContainer = document.querySelector('.importExportContainer');
+const importExportMenu = document.querySelector('.importExportMenu');
+const importBtn = document.querySelector('.importBtn');
+const exportBtn = document.querySelector('.exportBtn');
 let dateInput;
+
+//show or hide import and export container when menu is clicked
+importExportMenu.addEventListener('click', function () {
+    importExportContainer.classList.toggle('hidden');
+});
 
 //get tasks object from localstorage or initialize if not present
 let tasks = JSON.parse(localStorage.getItem('data')) || {
@@ -210,12 +219,15 @@ function renderAllTasks() {
         );
     });
 
-    //hide all menus after re-rendering in done section
+    /* hide move buttons in done sections */
     document
-        .querySelectorAll('.doneTasks .task .menu')
+        .querySelectorAll('.doneTasks .task .taskMenu .moveToProgress')
+        .forEach((hide) => hide.classList.add('hidden'));
+    document
+        .querySelectorAll('.doneTasks .task .taskMenu .moveToDone')
         .forEach((hide) => hide.classList.add('hidden'));
 
-    //hide move to done button in in progress section
+    //hide move to inProgress button in in progress section
     document
         .querySelectorAll('.inProgressTasks .task .taskMenu .moveToProgress')
         .forEach((btn) => btn.classList.add('hidden'));
@@ -226,6 +238,11 @@ function renderAllTasks() {
         .forEach((addStrikeElementsToDoneTitle) =>
             addStrikeElementsToDoneTitle.classList.add('strike')
         );
+
+    //hide all groupBtnDisplay menus after search is performed
+    document
+        .querySelectorAll('.groupBtnDisplay')
+        .forEach((x) => x.classList.add('hidden'));
 
     closeModalFunc(); //close task modal
     numOfTasksFunc(); //update number of tasks in each section
@@ -539,6 +556,8 @@ document.querySelectorAll('.groupBtnDisplay .clear').forEach((item) =>
             return notificationFuncSecondary(
                 `No Tasks Found in ${this.closest('section').classList[0].toUpperCase()} Section`
             );
+            //hide all groupBtnDisplay menus after clicking clear button if there are no tasks in the current section to clear
+            this.closest('.groupBtnDisplay').classList.add('hidden');
         } else {
             tasks[this.closest('section').classList[0]] = []; //clear tasks in the current section
             notificationFuncSecondary(
@@ -573,6 +592,114 @@ document
         renderAllTasks();
         notificationFuncSecondary('Cleared search results'); //show notification that search results have been cleared
     });
+
+/* export tasks as json
+exportBtn.addEventListener('click', function () {
+debugger;
+    const dataStr =
+        'data:text/json;charset=utf-8,'
+        encodeURIComponent(JSON.stringify(localStorage.getItem("data")));
+    const link = document.createElement('a');
+    link.href = dataStr;
+    link.download = 'tasks.json';
+    document.body.appendChild(link);
+    link.click();
+    console.log(link, dataStr);
+    document.body.removeChild(link);
+    notificationFuncSecondary('Exported tasks to file'); //show notification that tasks have been exported
+    importExportContainer.classList.add('hidden'); //hide import export container after exporting
+});
+
+export tasks as json
+exportBtn.addEventListener('click', function () {
+    const data = JSON.stringify(tasks);
+    const blob = new Blob([data], {type: 'application/json'});
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = 'tasks.json'
+    link.click();
+});
+
+import tasks from json file and re-render tasks
+importBtn.addEventListener('click', function () {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'application/json';
+    input.onchange = function (e) {
+        const file = e.target.files[0];
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            const importedTasks = JSON.parse(e.target.result);
+            Object.keys(importedTasks).forEach((section) => {
+                tasks[section] = importedTasks[section];
+            });
+            renderAllTasks();
+            notificationFuncSecondary('Imported tasks from file'); //show notification that tasks have been imported
+        };
+        reader.readAsText(file);
+    };
+    input.click();
+    importExportContainer.classList.add('hidden'); //hide import export container after importing
+}); */
+
+// Export tasks as JSON
+exportBtn.addEventListener('click', function () {
+    // Ensure we are stringifying the actual object, not a string from localStorage
+    const data = JSON.stringify(tasks, null, 2);
+    const blob = new Blob([data], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'tasks.json';
+
+    document.body.appendChild(link);
+    link.click();
+
+    // Cleanup: remove element and free memory
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+
+    notificationFuncSecondary('Exported tasks to file');
+    importExportContainer.classList.add('hidden');
+});
+
+// Import tasks from JSON file
+importBtn.addEventListener('click', function () {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.json, application/json';
+
+    input.onchange = function (e) {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            try {
+                const importedTasks = JSON.parse(e.target.result);
+
+                //Clear current tasks object without losing the reference
+                Object.keys(tasks).forEach((key) => delete tasks[key]);
+
+                //Assign imported data to the tasks object
+                Object.assign(tasks, importedTasks);
+
+                //Update UI
+                renderAllTasks();
+
+                notificationFuncSecondary('Imported tasks successfully');
+            } catch (err) {
+                console.error('Import failed:', err);
+                notificationFuncSecondary('Invalid JSON file.');
+            }
+        };
+        reader.readAsText(file);
+    };
+
+    input.click();
+    importExportContainer.classList.add('hidden');
+});
 
 //event listeners
 addTaskBtn.addEventListener('click', showModalFunc);

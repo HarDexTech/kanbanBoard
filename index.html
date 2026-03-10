@@ -18,7 +18,7 @@
     <body>
         <section
             class="greetUser flex column gap hidden"
-            style="height: 100dvh; width: 100%;"
+            style="height: 100dvh; width: 100%"
         >
             <div class="greetContainer flex column gap">
                 <div class="bg">
@@ -33,17 +33,22 @@
                     </h1>
                 </div>
                 <p class="greetMsg">
-                    Let's get you set up and organized in no time. <br> Personalized productivity starts here.
+                    Let's get you set up and organized in no time. <br />
+                    Personalized productivity starts here.
                 </p>
                 <div class="greetInput">
-                    <label for="nameInput">Enter your name to get started</label>
+                    <label for="nameInput"
+                        >Enter your name to get started</label
+                    >
                     <input
                         type="text"
                         placeholder="Enter your name"
                         id="nameInput"
                     />
                 </div>
-                <button id="submitName">Get Started <i class="fa-solid fa-arrow-right"></i></button>
+                <button id="submitName">
+                    Get Started <i class="fa-solid fa-arrow-right"></i>
+                </button>
             </div>
         </section>
 
@@ -155,9 +160,24 @@
                 </a>
             </div>
 
+            <div class="importExportMenu">
+                <button type="button">
+                    <i class="fas fa-ellipsis-h"></i>
+                </button>
+            </div>
         </header>
+
+        <div class="importExportContainer flex column hidden">
+            <button type="button" class="importBtn">
+                Import <i class="fa-solid fa-file-import"></i>
+            </button>
+            <button type="button" class="exportBtn">
+                Export <i class="fa-solid fa-file-export"></i>
+            </button>
+        </div>
+
         <!-- greeting message displayed in header when available -->
-        <div class="showGreeting hidden" style="font-weight: bold;"></div>
+        <div class="showGreeting hidden" style="font-weight: bold"></div>
 
         <main>
             <!-- to do -->

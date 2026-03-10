@@ -50,7 +50,7 @@ svg {
 header {
     position: sticky;
     top: 0;
-    z-index: 1001;
+    z-index: 101;
     padding: 15px 50px;
     box-shadow: var(--shadow-lg);
     display: flex;
@@ -185,7 +185,7 @@ button {
     background-color: rgb(17 21 24 / 0.6);
     position: fixed;
     top: 0;
-    z-index: 100000;
+    z-index: 1000;
 }
 .modal::-webkit-scrollbar {
     display: none;
@@ -378,7 +378,7 @@ select:focus {
 }
 .groupBtnDisplay {
     position: absolute;
-    z-index: 1000;
+    z-index: 101;
 }
 .strike {
     text-decoration: line-through;
@@ -394,7 +394,7 @@ select:focus {
         font-size: var(--spacing-md) !important;
         color: black;
     }
-    @media screen and (max-width: 580px) {
+    @media screen and (max-width: 1024px) {
         display: none !important;
     }
 }
@@ -510,6 +510,9 @@ select:focus {
     .left {
         gap: calc(var(--gap) / 2);
     }
+    .searchBar {
+        display: none !important;
+    }
 }
 @media screen and (max-width: 480px) {
     main {
@@ -564,6 +567,7 @@ select:focus {
     }
     .searchBar {
         gap: 6px;
+        display: none !important;
         & button {
             width: 36px;
             height: 36px;
@@ -571,7 +575,7 @@ select:focus {
             font-size: 1rem;
         }
     }
-    .github-corner{
+    .github-corner {
         display: none !important;
     }
 }
@@ -585,7 +589,7 @@ select:focus {
     border-radius: var(--border-radius);
     border: 2px solid #e0e0e0;
     transition: var(--transition);
-    z-index: 100;
+    z-index: 11;
     min-width: 200px;
     & i {
         position: absolute;
@@ -699,7 +703,7 @@ select:focus {
     padding: 0;
     max-width: 400px;
 }
-.greetUser{
+.greetUser {
     position: fixed;
     top: 0;
     left: 0;
@@ -708,11 +712,11 @@ select:focus {
     background: rgb(17 21 24 / 0.6);
     justify-content: center;
     align-items: center;
-    z-index: 100000;
+    z-index: 11;
 }
 .greetContainer {
     background: var(--card-light);
-    z-index: 100000;
+    z-index: 11;
     padding: 0 40px 40px 40px;
     border-radius: var(--border-radius);
     box-shadow: var(--shadow-lg);
@@ -730,7 +734,7 @@ select:focus {
             box-shadow: var(--shadow-lg);
         }
     }
-    & .close{
+    & .close {
         position-anchor: --toRight;
         position: absolute;
         left: calc(anchor(right) - 40px);
@@ -754,7 +758,7 @@ select:focus {
             }
         }
     }
-    & button{
+    & button {
         margin-top: var(--spacing-md);
         padding: var(--spacing-md);
         font-size: 1rem;
@@ -769,21 +773,20 @@ select:focus {
             background: #227bc3;
         }
     }
-    & .greetInput{
+    & .greetInput {
         display: flex;
         flex-direction: column;
         align-items: start;
         gap: var(--spacing-sm);
     }
 }
-.showGreeting{
+.showGreeting {
     padding: 0 0 10px 80px;
     border-radius: var(--border-radius);
-    z-index: 1000000;
+    z-index: 11;
     cursor: pointer;
     @media screen and (max-width: 1024px) {
         padding: 0 0 10px 30px;
-        
     }
 }
 .wave {
@@ -792,14 +795,30 @@ select:focus {
     transform-origin: 70% 70%;
 }
 @keyframes waveAnimation {
-    0% { transform: rotate(0deg); }
-    15% { transform: rotate(14deg); }
-    30% { transform: rotate(-8deg); }
-    40% { transform: rotate(14deg); }
-    50% { transform: rotate(-4deg); }
-    60% { transform: rotate(10deg); }
-    70% { transform: rotate(0deg); }
-    100% { transform: rotate(0deg); }
+    0% {
+        transform: rotate(0deg);
+    }
+    15% {
+        transform: rotate(14deg);
+    }
+    30% {
+        transform: rotate(-8deg);
+    }
+    40% {
+        transform: rotate(14deg);
+    }
+    50% {
+        transform: rotate(-4deg);
+    }
+    60% {
+        transform: rotate(10deg);
+    }
+    70% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(0deg);
+    }
 }
 .bg {
     width: calc(100% + 80px);
@@ -807,10 +826,59 @@ select:focus {
     height: 100%;
     border-radius: 3% 3% 0 0;
     anchor-name: --toRight;
-    background-image: radial-gradient(circle at 2px 2px, currentColor 1px, transparent 0);
+    background-image: radial-gradient(
+        circle at 2px 2px,
+        currentColor 1px,
+        transparent 0
+    );
     background-size: 24px 24px;
 }
 .greetTitle span:not(.hand) {
     background: white;
     width: calc(100%);
+}
+.importExportContainer {
+    position-anchor: --position-exportImportmenu;
+    position: absolute;
+    top: anchor(bottom);
+    right: anchor(right);
+    z-index: 200;
+    background-color: var(--card-light);
+    box-shadow: var(--shadow-lg);
+    border-radius: var(--border-radius);
+    width: 100px;
+    & button{
+        border: none;
+        background: none;
+        cursor: pointer;
+        padding: var(--spacing-md);
+        width: 100%;
+        text-align: left;
+        border-radius: var(--border-radius);
+        transition: var(--transition);
+        &:hover {
+            background: var(--background-light);
+        }
+    }
+}
+.importExportMenu {
+    anchor-name: --position-exportImportmenu;
+    background: var(--card-light);
+    box-shadow: var(--shadow-lg);
+    border-radius: var(--border-radius);
+    padding: var(--spacing-sm);
+    gap: var(--spacing-sm);
+    & button {
+        border: none;
+        background: none;
+        cursor: pointer;
+        padding: var(--spacing-sm);
+        width: 100%;
+        text-align: left;
+        border-radius: var(--border-radius);
+        transition: var(--transition);
+        &:hover {
+            background: var(--background-light);
+        }
+    }
 }
