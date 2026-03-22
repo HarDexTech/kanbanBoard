@@ -1,3 +1,6 @@
+//TODO
+//Refactor
+
 'use strict';
 // dom elements
 const addTaskBtn = document.querySelector('.addTask button');
@@ -25,6 +28,8 @@ const importExportMenu = document.querySelector('.importExportMenu');
 const importBtn = document.querySelector('.importBtn');
 const exportBtn = document.querySelector('.exportBtn');
 let dateInput;
+let column;
+let taskIndex;
 
 //show or hide import and export container when menu is clicked
 importExportMenu.addEventListener('click', function () {
@@ -61,7 +66,7 @@ if (!localStorage.getItem('userName')) {
 } else {
     getAndShowUserName(localStorage.getItem('userName'));
 }
-//event listener to close input when close is clicked
+//event listener to close greet modal when close button is clicked
 closeGreetBtn.addEventListener('click', function () {
     greetUser.classList.add('hidden');
 });
@@ -76,74 +81,25 @@ submitNameBtn.addEventListener('click', function () {
     getAndShowUserName(localStorage.getItem('userName'));
     greetUser.classList.add('hidden');
 });
+//listen for enter key to submit greet modal form
 userNameInput.addEventListener('keypress', function (e) {
     if (e.key === 'Enter') {
         submitNameBtn.click();
     }
 });
 
-// functions
-//remove hidden class to show modal
+//remove hidden class to show task modal
 function showModalFunc() {
     document.querySelector('.addTaskModal').classList.remove('hidden');
+
+    document.querySelector('.modalHead h2').scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 //add hidden class to hide modal
 function closeModalFunc() {
     document.querySelector('.addTaskModal').classList.add('hidden');
-}
-
-//function to validate modal input, create task and render tasks
-function validateModalInputFunc() {
-    // reset error messages and dom elements
-    document.querySelector('.titleError').classList.add('hidden');
-    document.querySelector('.dateError').classList.add('hidden');
-    document.querySelector('.dueDate').classList.add('hidden');
-    dateInput = `${dateMM.value}-${dateDD.value}-${dateYYYY.value}`; //get date input in mm-dd-yyyy format
-    let changeDateFormat = new Date(dateInput); //change date format to iso format to compare with current date
-    let currentDate = new Date(); //get current date
-
-    // validation checks
-    if (taskTitle.value.trim() === '') {
-        document.querySelector('.titleError').classList.remove('hidden');
-        document.querySelector('.titleError').textContent =
-            'Title cannot be empty';
-        taskTitle.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        return;
-    }
-    taskTitle.value.length > 50 &&
-        (document.querySelector('.titleError').classList.remove('hidden'),
-        document
-            .querySelector('.titleError')
-            .scrollIntoView({ behavior: 'smooth', block: 'start' }));
-    taskTitle.value.length > 50 &&
-        ((document.querySelector('.titleError').textContent =
-            'Title cannot exceed 50 characters'),
-        taskTitle.scrollIntoView({ behavior: 'smooth', block: 'start' }));
-
-    if (dateInput === '--') {
-        //if date input is empty, set dateInput to -- to display 'No due date' in the DOM
-        dateInput = '--';
-    } else {
-        //if date input is not empty, validate date input
-        if (changeDateFormat.toString() === 'Invalid Date') {
-            document.querySelector('.dateError').classList.remove('hidden');
-            document.querySelector('.dateError').textContent =
-                'Please enter a valid date';
-            dateMM.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            return;
-        }
-    }
-
-    if (changeDateFormat < currentDate) {
-        //return error if due date is in the past
-        document.querySelector('.dueDate').classList.remove('hidden');
-        return; //ends the function
-    }
-
-    // Loop through tasks.toDo and create HTML for each
-    toDOArrayFunc();
-    renderAllTasks(); // if all validations pass, show the task
+    document.querySelector('.createTask').classList.add('hidden');
+    document.querySelector('.editTaskBtn').classList.add('hidden');
 
     // reset all modal input fields
     taskTitle.value = '';
@@ -151,14 +107,77 @@ function validateModalInputFunc() {
     dateDD.value = '';
     dateMM.value = '';
     dateYYYY.value = '';
-
-    notificationFuncSecondary('New Task Created'); //show notification that new task has been created
 }
 
-//function to add task to tasks.toDo array
+//----------------------------validate input------------------------------//
+function validateModalInputFunc() {
+    // reset error messages and dom elements
+    document.querySelector('.titleError').classList.add('hidden');
+    document.querySelector('.dateError').classList.add('hidden');
+    document.querySelector('.pastDueDate').classList.add('hidden');
+
+    //----------------------------get date and variables------------------------------//
+    dateInput = `${dateMM.value}-${dateDD.value}-${dateYYYY.value}`; //get date input in mm-dd-yyyy format
+    let changeDateFormat = new Date(dateInput); //change date format to iso format to compare with current date
+    let currentDate = new Date(); //get current date
+    let isValid = true; //boolean variable to track if input is valid or not
+
+    //----------------------------validation check------------------------------//
+    // check if title is empty
+    if (taskTitle.value.trim() === '') {
+        document.querySelector('.titleError').classList.remove('hidden');
+        document.querySelector('.titleError').textContent = 'Title cannot be empty';
+        taskTitle.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        isValid = false;
+        return isValid;
+    }
+    //check for long titles
+    if (taskTitle.value.length > 50) {
+        document.querySelector('.titleError').classList.remove('hidden');
+        document.querySelector('.titleError').textContent = 'Title cannot exceed 50 characters';
+        taskTitle.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        isValid = false;
+        return isValid;
+    }
+    //check for empty dates and validate date if date is entered
+    if (dateInput === '--') {
+        //if date input is empty, set dateInput to -- to display 'No due date' in the DOM
+        dateInput = '--';
+    } else {
+        //if date input is not empty, validate date input
+        if (changeDateFormat.toString() === 'Invalid Date') {
+            document.querySelector('.dateError').classList.remove('hidden');
+            document.querySelector('.dateError').textContent = 'Please enter a valid date';
+            dateMM.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            isValid = false;
+            return isValid;
+        }
+    }
+    //check for if date is in the past
+    if (changeDateFormat.setHours(0, 0, 0, 0) < currentDate.setHours(0, 0, 0, 0)) {
+        //return error if due date is in the past
+        document.querySelector('.pastDueDate').classList.remove('hidden');
+        dateMM.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        isValid = false;
+        return isValid; //ends the function
+    }
+    return isValid; //if all validations pass, return true
+}
+
+//function to validate modal input, create task and render tasks
+function validateAndRenderTaskFunc() {
+    if (validateModalInputFunc()) {
+        // Loop through tasks.toDo and create HTML for each
+        toDOArrayFunc();
+        renderAllTasks(); // if all validations pass, show the task
+        notificationFuncSecondary('New Task Created'); //show notification that new task has been created
+    }
+}
+
+//function to add task to tasks object
 function toDOArrayFunc() {
     tasks.toDo.push({
-        id: Date.now(), // unique ID
+        id: crypto.randomUUID(), // unique ID
         title: taskTitle.value,
         description: description.value,
         priority: priorityItem.value,
@@ -172,99 +191,105 @@ function renderAllTasks() {
     localStorage.setItem('data', JSON.stringify(tasks)); //save tasks object to localstorage
     notificationFunc('Tasks Updated'); //show notification that tasks have been updated
 
+     //----------------------------get tasks object from localstorage or initialize if not present------------------------------//
     tasks = JSON.parse(localStorage.getItem('data')) || {
         toDo: [],
         inProgress: [],
         done: [],
-    }; //get tasks object from localstorage or initialize if not present
+    };
     /********************************clear all menus before re-rendering******************************/
     toDoTasks.innerHTML = '';
     inProgressTasks.innerHTML = '';
     doneTasks.innerHTML = '';
 
     /********************************render all tasks from tasks object using loops**********************/
-    //toDo loop
     tasks.toDo.forEach((task) => {
-        updateHTML(
-            task.title,
-            task.description,
-            task.priority,
-            task.dueDate,
-            task.id,
-            'toDo'
-        );
+        updateHTML(task.title, task.description, task.priority, task.dueDate, task.id, 'toDo');
     });
-
-    //inProgress loop
     tasks.inProgress.forEach((task) => {
-        updateHTML(
-            task.title,
-            task.description,
-            task.priority,
-            task.dueDate,
-            task.id,
-            'inProgress'
-        );
+        updateHTML(task.title, task.description, task.priority, task.dueDate, task.id, 'inProgress');
     });
-
-    //done loop
     tasks.done.forEach((task) => {
-        updateHTML(
-            task.title,
-            task.description,
-            task.priority,
-            task.dueDate,
-            task.id,
-            'done'
-        );
+        updateHTML(task.title, task.description, task.priority, task.dueDate, task.id, 'done');
     });
 
-    /* hide move buttons in done sections */
-    document
-        .querySelectorAll('.doneTasks .task .taskMenu .moveToProgress')
-        .forEach((hide) => hide.classList.add('hidden'));
-    document
-        .querySelectorAll('.doneTasks .task .taskMenu .moveToDone')
-        .forEach((hide) => hide.classList.add('hidden'));
+    //----------------------------hide all move buttons in done sections------------------------------//
+    document.querySelectorAll('.doneTasks .task .taskMenu .moveToProgress').forEach((hide) => hide.classList.add('hidden'));
+    document.querySelectorAll('.doneTasks .task .taskMenu .moveToDone').forEach((hide) => hide.classList.add('hidden'));
 
     //hide move to inProgress button in in progress section
-    document
-        .querySelectorAll('.inProgressTasks .task .taskMenu .moveToProgress')
-        .forEach((btn) => btn.classList.add('hidden'));
+    document.querySelectorAll('.inProgressTasks .task .taskMenu .moveToProgress').forEach((btn) => btn.classList.add('hidden'));
 
-    //add strike through to done task titles
-    document
-        .querySelectorAll('.doneTasks .taskTitle')
-        .forEach((addStrikeElementsToDoneTitle) =>
-            addStrikeElementsToDoneTitle.classList.add('strike')
-        );
+    //add strike through to task titles in done section
+    document.querySelectorAll('.doneTasks .taskTitle').forEach((addStrikeElementsToDoneTitle) => addStrikeElementsToDoneTitle.classList.add('strike'));
 
-    //hide all groupBtnDisplay menus after search is performed
-    document
-        .querySelectorAll('.groupBtnDisplay')
-        .forEach((x) => x.classList.add('hidden'));
+    //hide all menus after search is performed
+    document.querySelectorAll('.groupBtnDisplay').forEach((x) => x.classList.add('hidden'));
 
     closeModalFunc(); //close task modal
     numOfTasksFunc(); //update number of tasks in each section
     notificationFunc('Tasks Updated'); //show notification that tasks have been updated
+
+    //-----------------------------Edit Functionality------------------//
+    document.querySelectorAll('.editTask').forEach((item) => {
+        item.addEventListener('click', function () {
+            //-----------------show edit button------------------------//
+            document.querySelector('.createTask').classList.add('hidden');
+            document.querySelector('.editTaskBtn').classList.remove('hidden');
+
+            showModalFunc(); //show modal
+
+            //---------------------get task, column, index------------------------------//
+            let currentTaskId = this.closest('.task').getAttribute('id');
+            column = this.closest('section').classList[0];
+
+            //get task object and display to edit modal
+            let taskObject = tasks[column].find((x) => Number(x.id) === Number(currentTaskId));
+
+            taskIndex = tasks[column].indexOf(taskObject);
+
+            //----------------------------get task variables------------------------------//
+            let dateInputs = document.querySelectorAll('.date input');
+            let date = new Date(taskObject.dueDate).toLocaleDateString().split('/');
+            let dateDD = dateInputs[1];
+            let dateMM = dateInputs[0];
+            let dateYYYY = dateInputs[2];
+
+            //----------------------------input task input to the modal------------------------------//
+            document.querySelector('.taskTitleInput input').value = taskObject.title;
+            document.querySelector('.description textarea').value = taskObject.description;
+            document.querySelector('.priority select').value = taskObject.priority;
+            dateDD.value = date[1];
+            dateMM.value = date[0];
+            dateYYYY.value = date[2];
+
+            //----------------------------event listener for edit button------------------------------//
+            document.querySelector('.editTaskBtn').addEventListener('click', function () {
+                if (validateModalInputFunc()) {
+                    let currentTaskObject = tasks[column][taskIndex];
+                    currentTaskObject.title = document.querySelector('.taskTitleInput input').value;
+                    currentTaskObject.description = document.querySelector('.description textarea').value;
+                    currentTaskObject.priority = document.querySelector('.priority select').value;
+                    currentTaskObject.dueDate = `${document.getElementById('mm').value}-${document.getElementById('dd').value}-${document.getElementById('yyyy').value}`;
+                    renderAllTasks();
+                }
+            });
+        });
+    });
+
+    (arr) => {
+        // Check for duplicate IDs across all sections
+        arr = [...tasks.toDo.map((x) => x.id), ...tasks.inProgress.map((x) => x.id), ...tasks.done.map((x) => x.id)];
+        new Set(arr).size === arr.length;
+        notificationFuncSecondary('Duplicate IDs found in tasks'); // Show notification if duplicate IDs are found
+    };
 }
 renderAllTasks(); //render tasks on page load
 
 //function to create task HTML and add it to the DOM
-function updateHTML(
-    taskTitleValue,
-    taskDescriptionValue,
-    priorityItemValue,
-    dateInputValue,
-    id,
-    status
-) {
+function updateHTML(taskTitleValue, taskDescriptionValue, priorityItemValue, dateInputValue, id, status) {
     let color;
-    priorityItemValue === 'High Priority'
-        ? (color = 'red')
-        : priorityItemValue === 'Medium Priority'
-          ? (color = 'orange')
-          : (color = 'green');
+    priorityItemValue === 'High Priority' ? (color = 'red') : priorityItemValue === 'Medium Priority' ? (color = 'orange') : (color = 'green');
 
     // Determine which column to add the task to
     let targetColumn = toDoTasks;
@@ -275,6 +300,7 @@ function updateHTML(
     }
 
     //function to show tasks will be implemented here
+    //TODO: Refactor this function to use createElement and appendChild instead of innerHTML for better performance and security
     targetColumn.innerHTML += `
     <div class="task" id="${id}">
         <button type="button" class="menu">
@@ -282,6 +308,7 @@ function updateHTML(
         </button>
 
         <div class="taskMenu flex column hidden">
+            <button class="editTask" id="edit">Edit Task <i class="fa-solid fa-pen-to-square" style="margin-left: 5px;"></i></button>
             <button class="moveToProgress btnMove" id="inProgress">Move to In Progress</button>
             <button class="moveToDone btnMove" id="done">Move to Done</button>
             <button class="deleteTask btnMove" id="delete">Delete Task<i class="fas fa-trash" style="margin-left: 5px;"></i></button>
@@ -302,14 +329,12 @@ function updateHTML(
     const moveButtons = document.querySelectorAll('.btnMove');
     moveButtons.forEach((btn) =>
         btn.addEventListener('click', function () {
-            const taskId = parseInt(
-                btn.closest('.task').getAttribute('id'),
-                10
-            );
+            const taskId = parseInt(btn.closest('.task').getAttribute('id'), 10);
             const newStatus = btn.getAttribute('id');
             moveTask(taskId, newStatus);
         })
     );
+    //event listener to close menu when clicking outside of menu
     window.onclick = function (event) {
         if (!event.target.matches('.menu i')) {
             document.querySelectorAll('.taskMenu').forEach((menu) => {
@@ -385,14 +410,11 @@ function notificationFuncSecondary(msg) {
 function numOfTasksFunc() {
     //calculate number of tasks in each section and update the DOM
     let numOfTasks = document.querySelectorAll('.toDoTasks .task').length;
-    let numOfInProgress = document.querySelectorAll(
-        '.inProgressTasks .task'
-    ).length;
+    let numOfInProgress = document.querySelectorAll('.inProgressTasks .task').length;
     let numOfDone = document.querySelectorAll('.doneTasks .task').length;
     document.querySelector('.numOfTask').textContent = numOfTasks;
     document.querySelector('.numOfTask').classList.remove('hidden');
-    document.querySelector('.numOfInProgressTask').textContent =
-        numOfInProgress;
+    document.querySelector('.numOfInProgressTask').textContent = numOfInProgress;
     document.querySelector('.numOfInProgressTask').classList.remove('hidden');
     document.querySelector('.numOfDoneTask').textContent = numOfDone;
     document.querySelector('.numOfDoneTask').classList.remove('hidden');
@@ -414,9 +436,7 @@ function moveTask(taskId, newStatus) {
         taskToMove = tasks.inProgress.find((task) => task.id === taskId);
         if (taskToMove) {
             // Found it! Remove from inProgress
-            tasks.inProgress = tasks.inProgress.filter(
-                (task) => task.id !== taskId
-            );
+            tasks.inProgress = tasks.inProgress.filter((task) => task.id !== taskId);
         }
     }
 
@@ -444,22 +464,14 @@ function moveTask(taskId, newStatus) {
     }
 
     newStatus === 'delete' && notificationFuncSecondary('Deleted task'); //notification function returns 'Deleted task'
-    newStatus !== 'delete' &&
-        notificationFuncSecondary(`Moved task to ${newStatus}`); //notification function returns 'Moved task to newStatus' if newStatus is not delete
+    newStatus !== 'delete' && notificationFuncSecondary(`Moved task to ${newStatus}`); //notification function returns 'Moved task to newStatus' if newStatus is not delete
 }
 
 function searchFunction() {
     let input = document.getElementById('searchInput').value.toLowerCase();
-    if (input.trim() === '')
-        return notificationFuncSecondary('Please enter a search term');
+    if (input.trim() === '') return notificationFuncSecondary('Please enter a search term');
 
-    const [foundTaskInToDo, foundTaskInProgress, foundTaskInDone] = [
-        tasks.toDo.filter((task) => task.title.toLowerCase().includes(input)),
-        tasks.inProgress.filter((task) =>
-            task.title.toLowerCase().includes(input)
-        ),
-        tasks.done.filter((task) => task.title.toLowerCase().includes(input)),
-    ];
+    const [foundTaskInToDo, foundTaskInProgress, foundTaskInDone] = [tasks.toDo.filter((task) => task.title.toLowerCase().includes(input)), tasks.inProgress.filter((task) => task.title.toLowerCase().includes(input)), tasks.done.filter((task) => task.title.toLowerCase().includes(input))];
 
     let filteredTasks = { toDo: [], inProgress: [], done: [] };
     if (foundTaskInToDo.length > 0) {
@@ -471,8 +483,7 @@ function searchFunction() {
     if (foundTaskInDone.length > 0) {
         filteredTasks.done.push(...foundTaskInDone);
     }
-    if (!foundTaskInDone && !foundTaskInProgress && !foundTaskInToDo)
-        return notificationFuncSecondary('No task found');
+    if (!foundTaskInDone && !foundTaskInProgress && !foundTaskInToDo) return notificationFuncSecondary('No task found');
 
     /********************************clear all menus before re-rendering******************************/
     toDoTasks.innerHTML = '';
@@ -482,68 +493,38 @@ function searchFunction() {
     /********************************render all tasks from tasks object using loops**********************/
     //toDo loop
     filteredTasks.toDo.forEach((task) => {
-        updateHTML(
-            task.title,
-            task.description,
-            task.priority,
-            task.dueDate,
-            task.id,
-            'toDo'
-        );
+        updateHTML(task.title, task.description, task.priority, task.dueDate, task.id, 'toDo');
     });
 
     //inProgress loop
     filteredTasks.inProgress.forEach((task) => {
-        updateHTML(
-            task.title,
-            task.description,
-            task.priority,
-            task.dueDate,
-            task.id,
-            'inProgress'
-        );
+        updateHTML(task.title, task.description, task.priority, task.dueDate, task.id, 'inProgress');
     });
 
     //done loop
     filteredTasks.done.forEach((task) => {
-        updateHTML(
-            task.title,
-            task.description,
-            task.priority,
-            task.dueDate,
-            task.id,
-            'done'
-        );
+        updateHTML(task.title, task.description, task.priority, task.dueDate, task.id, 'done');
     });
 
     //hide all menus after re-rendering in done section
-    document
-        .querySelectorAll('.doneTasks .task .menu')
-        .forEach((hide) => hide.classList.add('hidden'));
+    document.querySelectorAll('.doneTasks .task .menu').forEach((hide) => hide.classList.add('hidden'));
 
     //hide move to done button in in progress section
-    document
-        .querySelectorAll('.inProgressTasks .task .taskMenu .moveToProgress')
-        .forEach((btn) => btn.classList.add('hidden'));
+    document.querySelectorAll('.inProgressTasks .task .taskMenu .moveToProgress').forEach((btn) => btn.classList.add('hidden'));
 
     //add strike through to done task titles
-    document
-        .querySelectorAll('.doneTasks .taskTitle')
-        .forEach((addStrikeElementsToDoneTitle) =>
-            addStrikeElementsToDoneTitle.classList.add('strike')
-        );
+    document.querySelectorAll('.doneTasks .taskTitle').forEach((addStrikeElementsToDoneTitle) => addStrikeElementsToDoneTitle.classList.add('strike'));
 
     closeModalFunc(); //close task modal
     numOfTasksFunc(); //update number of tasks in each section
     notificationFunc('Tasks Updated'); //show notification that tasks have been updated
 }
 
+//---------------------------------------EVENT LISTENERS-----------------------------//
 //show menu output will be implemented here
 document.querySelectorAll('.menuBtn').forEach((siblingMenuBtn) =>
     siblingMenuBtn.addEventListener('click', function () {
-        this.closest('.menuContainer')
-            .querySelector('.groupBtnDisplay')
-            .classList.toggle('hidden');
+        this.closest('.menuContainer').querySelector('.groupBtnDisplay').classList.toggle('hidden');
     })
 );
 
@@ -553,45 +534,32 @@ document.querySelectorAll('.groupBtnDisplay .clear').forEach((item) =>
         // Get section name (toDo, inProgress, or done) from parent section's first class
         let currentElement = tasks[this.closest('section').classList[0]];
         if (currentElement.length === 0) {
-            return notificationFuncSecondary(
-                `No Tasks Found in ${this.closest('section').classList[0].toUpperCase()} Section`
-            );
+            notificationFuncSecondary(`No Tasks Found in ${this.closest('section').classList[0].toUpperCase()} Section`);
             //hide all groupBtnDisplay menus after clicking clear button if there are no tasks in the current section to clear
-            this.closest('.groupBtnDisplay').classList.add('hidden');
+            return this.closest('.groupBtnDisplay').classList.add('hidden');
         } else {
             tasks[this.closest('section').classList[0]] = []; //clear tasks in the current section
-            notificationFuncSecondary(
-                `Cleared ${this.closest('section').classList[0]} tasks`
-            ); //show notification that tasks have been cleared
+            notificationFuncSecondary(`Cleared ${this.closest('section').classList[0]} tasks`); //show notification that tasks have been cleared
             renderAllTasks();
         }
     })
 );
 
-//search functionality to find tasks by title
-document.querySelector('.searchTaskBtn').addEventListener('click', function () {
-    searchFunction();
-});
-
 //debounce search input by 100ms to optimize search performance and prevent excessive re-rendering while typing
 document.querySelector('#searchInput').addEventListener('input', function () {
     setTimeout(() => {
-        if (document.getElementById('searchInput').value.trim() === '')
-            return renderAllTasks();
+        if (document.getElementById('searchInput').value.trim() === '') return renderAllTasks();
         searchFunction();
     }, 100); //debounce search input by 100ms});
 });
 
 //clear search results and re-render all tasks when clear search button is clicked
-document
-    .querySelector('.clearSearchBtn')
-    .addEventListener('click', function () {
-        if (document.getElementById('searchInput').value.trim() === '')
-            return notificationFuncSecondary('Search input is already empty');
-        document.getElementById('searchInput').value = '';
-        renderAllTasks();
-        notificationFuncSecondary('Cleared search results'); //show notification that search results have been cleared
-    });
+document.querySelector('.clearSearchBtn').addEventListener('click', function () {
+    if (document.getElementById('searchInput').value.trim() === '') return notificationFuncSecondary('Search input is already empty');
+    document.getElementById('searchInput').value = '';
+    renderAllTasks();
+    notificationFuncSecondary('Cleared search results'); //show notification that search results have been cleared
+});
 
 // Export tasks as JSON
 exportBtn.addEventListener('click', function () {
@@ -652,8 +620,21 @@ importBtn.addEventListener('click', function () {
     importExportContainer.classList.add('hidden');
 });
 
-//event listeners
-addTaskBtn.addEventListener('click', showModalFunc);
+document.querySelector('.searchTaskBtn').addEventListener('click', searchFunction); //search functionality to find tasks by title
+
+//----------------------------show modal and show create task button------------------------------//
+addTaskBtn.addEventListener('click', () => {
+    showModalFunc();
+    document.querySelector('.createTask').classList.remove('hidden');
+});
+
+//----------------------------event listener for edit button------------------------------//
+// document.querySelector('.editTaskBtn').addEventListener('click', function () {
+//     validateModalInputFunc();
+
+//     let curr = tasks[column][taskIndex];
+// });
+
 document.querySelector('.addBtnPlus').addEventListener('click', showModalFunc);
 cancelModalBtn.addEventListener('click', closeModalFunc);
-createTask.addEventListener('click', validateModalInputFunc); //validate inputs, create task and render tasks
+createTask.addEventListener('click', validateAndRenderTaskFunc);

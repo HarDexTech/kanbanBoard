@@ -25,6 +25,9 @@
 html {
     scroll-behavior: smooth;
 }
+@view-transition {
+    navigation: auto;
+}
 * {
     margin: 0;
     padding: 0;
@@ -252,14 +255,16 @@ select:focus {
     border-color: var(--primary);
     box-shadow: var(--shadow-lg);
 }
-.createTask {
+.createTask,
+.editTaskBtn {
     background: var(--primary) !important;
     color: #fff;
     border: none !important;
     font-weight: 600 !important;
     transition: var(--transition);
 }
-.createTask:hover {
+.createTask:hover,
+.editTaskBtn:hover {
     background: #227bc3 !important;
 }
 .cancelBtn {
@@ -269,7 +274,7 @@ select:focus {
     background: var(--sectionbg);
 }
 .btn button {
-    width: calc(100% / 2);
+    width: calc(100% / 2) !important;
 }
 .date div input:first-child,
 .date div input:nth-child(2) {
@@ -280,6 +285,18 @@ select:focus {
 }
 .btn {
     margin-top: 40px;
+    position: relative;
+    & .submitBtn,
+    & .sumbitBtn {
+        width: calc(100% / 2);
+        position: relative;
+        min-height: 3rem;
+    }
+    & .sumbitBtn button {
+        width: 100% !important;
+        position: absolute;
+        inset: 0;
+    }
 }
 .hidden {
     display: none !important;
@@ -826,11 +843,7 @@ select:focus {
     height: 100%;
     border-radius: 3% 3% 0 0;
     anchor-name: --toRight;
-    background-image: radial-gradient(
-        circle at 2px 2px,
-        currentColor 1px,
-        transparent 0
-    );
+    background-image: radial-gradient(circle at 2px 2px, currentColor 1px, transparent 0);
     background-size: 24px 24px;
 }
 .greetTitle span:not(.hand) {
@@ -847,7 +860,7 @@ select:focus {
     box-shadow: var(--shadow-lg);
     border-radius: var(--border-radius);
     width: 100px;
-    & button{
+    & button {
         border: none;
         background: none;
         cursor: pointer;
@@ -877,8 +890,14 @@ select:focus {
         text-align: left;
         border-radius: var(--border-radius);
         transition: var(--transition);
-        &:hover {
-            background: var(--background-light);
+        &:hover i {
+            color: var(--primary);
         }
     }
+}
+i:hover:not(.clearSearchBtn i) {
+    color: var(--primary);
+}
+.column.gap.delTask {
+    scrollbar-width: none;
 }
