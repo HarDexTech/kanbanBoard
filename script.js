@@ -335,7 +335,9 @@ function updateHTML(taskTitleValue, taskDescriptionValue, priorityItemValue, dat
         <div class="taskDesc">${taskDescriptionValue}</div>
         <div class="taskFooter column">
             <div class="priority" style="color: ${color};">${priorityItemValue}</div>
-            <div class="dueDate ${dateInputValue === 'Today' || dateInputValue === 'Overdue' ? 'red' : ''}">Due: ${new Date(dateInputValue).toDateString()}</div>
+            <div class="dueDate ${dateInputValue === 'Today' || dateInputValue === 'Overdue' ? 'red' : ''}">
+                Due: ${dateInputValue === '--' ? 'No due date' : new Date(dateInputValue).toDateString()}
+            </div>
         </div>
     </div>
     `;
