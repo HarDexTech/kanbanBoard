@@ -191,7 +191,7 @@ function renderAllTasks() {
     localStorage.setItem('data', JSON.stringify(tasks)); //save tasks object to localstorage
     notificationFunc('Tasks Updated'); //show notification that tasks have been updated
 
-     //----------------------------get tasks object from localstorage or initialize if not present------------------------------//
+    //----------------------------get tasks object from localstorage or initialize if not present------------------------------//
     tasks = JSON.parse(localStorage.getItem('data')) || {
         toDo: [],
         inProgress: [],
@@ -283,6 +283,10 @@ function renderAllTasks() {
         new Set(arr).size === arr.length;
         notificationFuncSecondary('Duplicate IDs found in tasks'); // Show notification if duplicate IDs are found
     };
+
+    // if(currentDate.setItem(0,0,0,0) === changeDateFormat.setHours(0, 0, 0, 0)){
+    //     notificationFuncSecondary('You have tasks due today'); // Show notification if there are tasks due today
+    // }
 }
 renderAllTasks(); //render tasks on page load
 
@@ -297,6 +301,19 @@ function updateHTML(taskTitleValue, taskDescriptionValue, priorityItemValue, dat
         targetColumn = inProgressTasks;
     } else if (status === 'done') {
         targetColumn = doneTasks;
+    }
+
+    //if date input is empty, display 'No due date' in the DOM, if not empty, display date in a readable format
+    dateInputValue === '--' ? 'No due date' : new Date(dateInputValue).toDateString(); 
+
+    //----------------------------get tasks due that current day------------------------------//
+    if (new Date(dateInputValue).setHours(0, 0, 0, 0) === new Date().setHours(0, 0, 0, 0)) {
+        notificationFuncSecondary('You have tasks due today'); // Show notification if there are tasks due today
+        dateInputValue = 'Today';
+    }
+    if (new Date(dateInputValue).setHours(0, 0, 0, 0) < new Date().setHours(0, 0, 0, 0)) {
+        notificationFuncSecondary('You have overdue tasks'); // Show notification if there are tasks due today
+        dateInputValue = 'Overdue';
     }
 
     //function to show tasks will be implemented here
@@ -318,7 +335,7 @@ function updateHTML(taskTitleValue, taskDescriptionValue, priorityItemValue, dat
         <div class="taskDesc">${taskDescriptionValue}</div>
         <div class="taskFooter column">
             <div class="priority" style="color: ${color};">${priorityItemValue}</div>
-            <div class="dueDate">Due: ${dateInputValue === '--' ? 'No due date' : new Date(dateInputValue).toDateString()}</div>
+            <div class="dueDate ${dateInputValue === 'Today' || dateInputValue === 'Overdue' ? 'red' : ''}">Due: ${dateInputValue}</div>
         </div>
     </div>
     `;
@@ -627,13 +644,6 @@ addTaskBtn.addEventListener('click', () => {
     showModalFunc();
     document.querySelector('.createTask').classList.remove('hidden');
 });
-
-//----------------------------event listener for edit button------------------------------//
-// document.querySelector('.editTaskBtn').addEventListener('click', function () {
-//     validateModalInputFunc();
-
-//     let curr = tasks[column][taskIndex];
-// });
 
 document.querySelector('.addBtnPlus').addEventListener('click', showModalFunc);
 cancelModalBtn.addEventListener('click', closeModalFunc);
