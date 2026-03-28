@@ -177,7 +177,8 @@ function validateAndRenderTaskFunc() {
 //function to add task to tasks object
 function toDOArrayFunc() {
     tasks.toDo.push({
-        id: crypto.randomUUID(), // unique ID
+        // id: crypto.randomUUID(), // unique ID
+        id: Date.now(), // unique ID
         title: taskTitle.value,
         description: description.value,
         priority: priorityItem.value,
