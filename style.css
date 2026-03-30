@@ -273,8 +273,22 @@ select:focus {
 .cancelBtn:hover {
     background: var(--sectionbg);
 }
-.btn button {
+.btn button:not(.cancelDelete) {
     width: calc(100% / 2) !important;
+}
+.cancelDelete,
+.confirmDelete {
+    width: calc((100% / 2)-50px) !important;
+}
+.confirmDelete:hover{
+    color: var(--danger);
+    border: 2px solid var(--danger);
+    transform: scale(1.03);
+}
+.cancelDelete:hover{
+    border: 2px solid var(--primary);
+    transform: scale(1.03);
+    color: var(--primary);
 }
 .date div input:first-child,
 .date div input:nth-child(2) {
@@ -282,6 +296,9 @@ select:focus {
 }
 .date div input:last-child {
     width: 120px;
+}
+.flex.btn.row.gap {
+    width: 100%;
 }
 .btn {
     margin-top: 40px;
@@ -895,9 +912,40 @@ select:focus {
         }
     }
 }
-i:hover:not(.clearSearchBtn i) {
-    color: var(--primary);
-}
 .column.gap.delTask {
     scrollbar-width: none;
+}
+.deleteContainer {
+    padding: var(--shadow-lg);
+    width: 440px;
+    height: 330px;
+    background: white;
+    box-shadow: var(--shadow);
+    border-radius: 25px;
+    & h2 {
+        font-weight: 800;
+        font-size: 1.5rem;
+        line-height: 1.75rem;
+    }
+    & p {
+        text-align: justify;
+        padding: 0 50px;
+    }
+}
+.warnIcon {
+    /* font-size: 3rem; */
+    /* color: red; */
+    width: 50px;
+    height: 50px;
+    z-index: 1;
+    background-color: rgb(254 226 226 / var(--tw-bg-opacity, 1));
+    border-radius: 50%;
+    & i {
+        color: red;
+        z-index: 2;
+        font-size: 1.875rem;
+    }
+}
+button.confirmDelete.flex.row {
+    gap: 10px;
 }

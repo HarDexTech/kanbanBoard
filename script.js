@@ -27,6 +27,8 @@ const importExportContainer = document.querySelector('.importExportContainer');
 const importExportMenu = document.querySelector('.importExportMenu');
 const importBtn = document.querySelector('.importBtn');
 const exportBtn = document.querySelector('.exportBtn');
+let taskToClear = null;
+let groupBtnDisplay;
 let dateInput;
 let column;
 let taskIndex;
@@ -305,7 +307,7 @@ function updateHTML(taskTitleValue, taskDescriptionValue, priorityItemValue, dat
     }
 
     //if date input is empty, display 'No due date' in the DOM, if not empty, display date in a readable format
-    dateInputValue === '--' ? 'No due date' : new Date(dateInputValue).toDateString(); 
+    dateInputValue === '--' ? 'No due date' : new Date(dateInputValue).toDateString();
 
     //----------------------------get tasks due that current day------------------------------//
     if (new Date(dateInputValue).setHours(0, 0, 0, 0) === new Date().setHours(0, 0, 0, 0)) {
@@ -548,22 +550,38 @@ document.querySelectorAll('.menuBtn').forEach((siblingMenuBtn) =>
     })
 );
 
-//clear tasks in each section when clear button is clicked and re-render tasks
+//show delete form when clear button is clicked in each section
 document.querySelectorAll('.groupBtnDisplay .clear').forEach((item) =>
     item.addEventListener('click', function () {
-        // Get section name (toDo, inProgress, or done) from parent section's first class
-        let currentElement = tasks[this.closest('section').classList[0]];
-        if (currentElement.length === 0) {
-            notificationFuncSecondary(`No Tasks Found in ${this.closest('section').classList[0].toUpperCase()} Section`);
-            //hide all groupBtnDisplay menus after clicking clear button if there are no tasks in the current section to clear
-            return this.closest('.groupBtnDisplay').classList.add('hidden');
-        } else {
-            tasks[this.closest('section').classList[0]] = []; //clear tasks in the current section
-            notificationFuncSecondary(`Cleared ${this.closest('section').classList[0]} tasks`); //show notification that tasks have been cleared
-            renderAllTasks();
-        }
+        groupBtnDisplay = this.closest('.groupBtnDisplay');
+        taskToClear = this.closest('section').classList[0]; //get section name (toDo, inProgress, or done) from parent section's first class and store it in a variable to be used in the confirm delete button event listener
+        showDeleteForm(); //show delete form when clear button is clicked in each section
     })
 );
+
+//----------------------------show delete form------------------------------//
+function showDeleteForm() {
+    let currentElement = tasks[taskToClear];
+    if (currentElement.length === 0) {
+        notificationFuncSecondary(`No Tasks Found in ${taskToClear.toUpperCase()} Section`);
+        //hide all groupBtnDisplay menus after clicking clear button if there are no tasks in the current section to clear
+        return groupBtnDisplay.classList.add('hidden');
+    }
+
+    document.querySelector('.deleteForm').classList.remove('hidden');
+
+    //event listeners for cancel and confirm delete buttons in delete form
+    document.querySelector('.cancelDelete').addEventListener('click', function () {
+        document.querySelector('.deleteForm').classList.add('hidden');
+    });
+    document.querySelector('.confirmDelete').addEventListener('click', function () {
+        tasks[taskToClear] = []; //clear tasks in the current section
+        notificationFuncSecondary(`Cleared ${taskToClear} tasks`); //show notification that tasks have been cleared
+        renderAllTasks();
+
+        document.querySelector('.deleteForm').classList.add('hidden');
+    });
+}
 
 //debounce search input by 100ms to optimize search performance and prevent excessive re-rendering while typing
 document.querySelector('#searchInput').addEventListener('input', function () {
