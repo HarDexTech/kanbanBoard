@@ -179,8 +179,8 @@ function validateAndRenderTaskFunc() {
 //function to add task to tasks object
 function toDOArrayFunc() {
     tasks.toDo.push({
-        // id: crypto.randomUUID(), // unique ID
-        id: Date.now(), // unique ID
+        id: crypto.randomUUID(), // unique ID
+        // id: Date.now(), // unique ID
         title: taskTitle.value,
         description: description.value,
         priority: priorityItem.value,
@@ -247,7 +247,7 @@ function renderAllTasks() {
             column = this.closest('section').classList[0];
 
             //get task object and display to edit modal
-            let taskObject = tasks[column].find((x) => Number(x.id) === Number(currentTaskId));
+            let taskObject = tasks[column].find((x) => String(x.id) === String(currentTaskId));
 
             taskIndex = tasks[column].indexOf(taskObject);
 
@@ -286,10 +286,6 @@ function renderAllTasks() {
         new Set(arr).size === arr.length;
         notificationFuncSecondary('Duplicate IDs found in tasks'); // Show notification if duplicate IDs are found
     };
-
-    // if(currentDate.setItem(0,0,0,0) === changeDateFormat.setHours(0, 0, 0, 0)){
-    //     notificationFuncSecondary('You have tasks due today'); // Show notification if there are tasks due today
-    // }
 }
 renderAllTasks(); //render tasks on page load
 
@@ -351,7 +347,7 @@ function updateHTML(taskTitleValue, taskDescriptionValue, priorityItemValue, dat
     const moveButtons = document.querySelectorAll('.btnMove');
     moveButtons.forEach((btn) =>
         btn.addEventListener('click', function () {
-            const taskId = parseInt(btn.closest('.task').getAttribute('id'), 10);
+            const taskId = String(btn.closest('.task').getAttribute('id'), 10);
             const newStatus = btn.getAttribute('id');
             moveTask(taskId, newStatus);
         })
@@ -447,27 +443,27 @@ function moveTask(taskId, newStatus) {
     let taskToMove = null;
 
     // Try to find in toDo
-    taskToMove = tasks.toDo.find((task) => task.id === taskId);
+    taskToMove = tasks.toDo.find((task) => String(task.id) === String(taskId));
     if (taskToMove) {
         // Found it! Remove from toDo
-        tasks.toDo = tasks.toDo.filter((task) => task.id !== taskId);
+        tasks.toDo = tasks.toDo.filter((task) => String(task.id) !== String(taskId));
     }
 
     // Try to find in inProgress
     if (!taskToMove) {
-        taskToMove = tasks.inProgress.find((task) => task.id === taskId);
+        taskToMove = tasks.inProgress.find((task) => String(task.id) === String(taskId));
         if (taskToMove) {
             // Found it! Remove from inProgress
-            tasks.inProgress = tasks.inProgress.filter((task) => task.id !== taskId);
+            tasks.inProgress = tasks.inProgress.filter((task) => String(task.id) !== String(taskId));
         }
     }
 
     // Try to find in done
     if (!taskToMove) {
-        taskToMove = tasks.done.find((task) => task.id === taskId);
+        taskToMove = tasks.done.find((task) => String(task.id) === String(taskId));
         if (taskToMove) {
             // Found it! Remove from done
-            tasks.done = tasks.done.filter((task) => task.id !== taskId);
+            tasks.done = tasks.done.filter((task) => String(task.id) !== String(taskId));
         }
     }
 
@@ -666,6 +662,9 @@ addTaskBtn.addEventListener('click', () => {
     document.querySelector('.createTask').classList.remove('hidden');
 });
 
-document.querySelector('.addBtnPlus').addEventListener('click', showModalFunc);
+document.querySelector('.addBtnPlus').addEventListener('click', () => {
+    showModalFunc();
+    document.querySelector('.createTask').classList.remove('hidden');
+});
 cancelModalBtn.addEventListener('click', closeModalFunc);
 createTask.addEventListener('click', validateAndRenderTaskFunc);
